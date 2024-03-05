@@ -1,0 +1,7 @@
+{
+  "name": "portaleRefact",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
