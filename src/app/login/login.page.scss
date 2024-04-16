@@ -1,0 +1,58 @@
+:host {
+    display: flex;
+   flex-direction: column;
+    height: 100%;
+  }
+  
+  ion-content {
+  flex: 1;
+  }
+  
+  .content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .login-container {
+    max-width: 400px; /* Imposta la larghezza massima del modulo di login */
+    padding: 20px; /* Aggiungi un po' di spazio intorno al modulo di login */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiungi un ombreggiamento più morbido intorno al modulo di login */
+    border-radius: 10px; /* Aggiungi angoli arrotondati al modulo di login */
+    background-color: #f9f9f9; /* Imposta un colore di sfondo leggermente diverso per il modulo di login */
+    color: #333; /* Imposta un colore di testo leggermente diverso per il modulo di login */
+  }
+ .my-custom-alert .alert-wrapper {
+   background: #333; 
+    color: #fff; 
+  }
+  .login-logo{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    width: 200px;
+  }
+  .manual-download {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: transparent; // Cambia in trasparente
+  
+    a {
+      text-decoration: none;
+      color: #333; // Cambia in un colore più scuro
+      font-size: 14px; // Riduci la dimensione del font
+      border: none; // Rimuovi il bordo
+      padding: 10px 20px;
+      border-radius: 50px;
+      transition: color 0.3s ease;
+  
+      &:hover {
+        color: #666; // Cambia in un colore più chiaro al passaggio del mouse
+      }
+    }
+  }

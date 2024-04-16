@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Modifica Utente</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  
+  <div class="form-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>ID</ion-label>
+      <ion-input [readonly]="true" formControlName="ID" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nome Utente</ion-label>
+      <ion-input [readonly]="permessi.includes('5')" formControlName="nomeUtente" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Username</ion-label>
+      <ion-input formControlName="Utente" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Password</ion-label>
+      <ion-input formControlName="Password" type="password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sede</ion-label>
+<ion-select  formControlName="Sede" [disabled]="isDisabled()" placeholder="Seleziona Sede" >
+  <ion-select-option *ngFor="let Sede of sedi" [value]="Sede">{{Sede}}</ion-select-option>
+</ion-select>
+</ion-item>
+    <ion-item>
+      <ion-label>Permesso</ion-label>
+      <ion-select formControlName="Permesso" [disabled]="isDisabled()" (ionChange)="onRoleChange($event)" multiple="true">
+        <ion-select-option *ngFor="let Permesso of ruoli" [value]="Permesso">{{Permesso}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item >
+      <ion-label>Indirizzo E-Mail</ion-label>
+      <ion-input formControlName="Email" type="email"></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit" [disabled]="!form.valid">Conferma</ion-button>
+    <ion-button expand="full" (click)="dismissModal()">Annulla</ion-button>
+  </form>
+  </div>
+</ion-content>

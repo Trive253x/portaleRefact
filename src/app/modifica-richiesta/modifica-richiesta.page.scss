@@ -1,0 +1,33 @@
+ion-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Modificato da center a flex-start */
+  align-items: center;
+  height: 100vh;
+}
+
+.card-margin {
+  margin: 20% auto 0; /* 20% di margine superiore, auto per i margini laterali, 0 per il margine inferiore */
+
+  @media (min-width: 768px) { /* Adjust this value based on what you consider a "large" screen */
+    margin: 10% auto 0;
+  }
+}
+
+.modern-card {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  padding: 20px;
+  width: 90%;
+}
+
+.modern-card ion-list ion-item {
+  margin-bottom: 10px;
+}
+
+.modern-card ion-row {
+  margin-top: 20px;
+}
+ion-label {
+  font-weight: bold;
+}

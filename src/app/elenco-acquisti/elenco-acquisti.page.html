@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>ElencoRichieste</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRichieste()"></ion-searchbar>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col ><strong>Utente</strong></ion-col>
+          <ion-col><strong>Sede</strong></ion-col>
+          <ion-col><strong>Descrizione</strong></ion-col>
+          <ion-col><strong>Data</strong></ion-col>
+          <ion-col><strong>Stato</strong></ion-col>
+          <ion-col><strong>Azioni</strong></ion-col> <!-- Aggiunto -->
+        </ion-row>
+      </ion-grid>
+      <ion-card-content style="height: 80vh; overflow-y: auto;">
+      <ion-grid>
+        <ion-row *ngFor="let acquisto of acquisti">
+          <ion-col>{{ acquisto.nomeUtente }}</ion-col>
+          <ion-col>{{ acquisto.Sede }}</ion-col>
+          <ion-col (click)="mostraRichiestaCompleta(acquisto)">
+            <span class="hover-underline">{{ truncate(acquisto.Descrizione, 15) }}</span>
+          </ion-col>
+          <ion-col>{{ acquisto.Data }}</ion-col>
+          <ion-col [ngStyle]="{'color': getColor(acquisto.Stato)}">{{ acquisto.Stato | uppercase}}</ion-col>
+          <ion-col>
+            <ion-button *ngIf="permesso.includes('1')||permesso.includes('2')||permesso.includes('6')||permesso.includes('7')" fill="clear" (click)="modifica(acquisto)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="elimina(acquisto)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col [style.display]="'none'">{{ acquisto.ID }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -24,3 +24,58 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+.my-custom-alert .alert-wrapper {
+    background: #333; 
+    color: #fff; 
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('assets/fonts/Poppins-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('assets/fonts/Poppins-BlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('assets/fonts/Poppins-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('assets/fonts/Poppins-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.modal-photo{
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    --min-height: 70%;
+    --min-width: 80%;
+    --max-height: 75%;
+    --max-width: 85%;
+}
+.modal-info{
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    --min-height: 20%;
+    --min-width: 20%;
+    --max-height: 25%;
+}

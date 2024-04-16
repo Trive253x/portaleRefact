@@ -1,0 +1,38 @@
+<ion-content>
+  <ion-card class="card-margin modern-card">
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Sede</ion-label>
+          <ion-input [(ngModel)]="richiesta.Sede"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>NomePc</ion-label>
+          <ion-input [(ngModel)]="richiesta.NomePc"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Richiesta</ion-label>
+          <ion-input [(ngModel)]="richiesta.Richiesta"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="permesso.includes('1')">
+          <ion-label>Stato</ion-label>
+          <ion-select [(ngModel)]="richiesta.Stato">
+            <ion-select-option value="INVIATA">INVIATA</ion-select-option>
+            <ion-select-option value="IN ELABORAZIONE">IN ELABORAZIONE</ion-select-option>
+            <ion-select-option value="RISOLTA">RISOLTA</ion-select-option>
+            <ion-select-option value="DA AUTORIZZARE">DA AUTORIZZARE</ion-select-option>
+            
+          </ion-select>
+        </ion-item>
+      </ion-list>
+      <ion-row>
+        <ion-col>
+          <ion-button color="danger" size="small" (click)="annulla()">Annulla</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button fill="outline" size="small" (click)="modifica(richiesta)">Salva</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

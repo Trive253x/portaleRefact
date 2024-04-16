@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: false,
+  apiUrl: 'https://portaleclienti.sisinformatica.it/api/model/',
+  imageUrl: 'https://portaleclienti.sisinformatica.it/source/',
+  path: '/var/www/html/Allegati/'
 };

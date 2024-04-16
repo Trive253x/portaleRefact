@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>ElencoRichieste</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRichieste()"></ion-searchbar>
+  </ion-card>
+  <ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col><strong>Utente</strong></ion-col>
+        <ion-col><strong>Sede</strong></ion-col>
+        <ion-col><strong>Nome Pc</strong></ion-col>
+        <ion-col><strong>Richiesta</strong></ion-col>
+        <ion-col> <strong>Data</strong></ion-col>
+        <ion-col>
+          <strong>Stato </strong>
+          <ion-select class="state-select" [(ngModel)]="selectedStato" (ionChange)="filterByStato()">
+            <ion-select-option value="">*</ion-select-option>
+            <ion-select-option value="INVIATA">INVIATA</ion-select-option>
+            <ion-select-option value="IN ELABORAZIONE">IN ELABORAZIONE</ion-select-option>
+            <ion-select-option value="AUTORIZZATA">AUTORIZZATA</ion-select-option>
+            <ion-select-option value="NON AUTORIZZATA">NON AUTORIZZATA</ion-select-option>
+            <ion-select-option value="RISOLTA">RISOLTA</ion-select-option>
+          </ion-select>
+        </ion-col>
+        <ion-col><strong>Azioni</strong></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-card-content style="height: 80vh; overflow-y: auto;">
+      <ion-grid>
+        <ion-row *ngFor="let richiesta of richieste">
+          <ion-col>{{ richiesta.nomeUtente }}</ion-col>
+          <ion-col>{{ richiesta.Sede }}</ion-col>
+          <ion-col>{{ richiesta.NomePc }}</ion-col>
+          <ion-col (click)="mostraRichiestaCompleta(richiesta)">
+            <span class="hover-underline">{{ truncate(richiesta.Richiesta, 15) }}</span>
+          </ion-col>
+          <ion-col>{{ richiesta.Data }}</ion-col>
+          <ion-col [ngStyle]="{'color': getColor(richiesta.Stato)}">{{ richiesta.Stato | uppercase}}
+            <ion-col *ngIf="permesso.includes('2')||permesso.includes('3')">
+              <ion-toggle *ngIf="(richiesta.Stato == 'DA AUTORIZZARE' || richiesta.Stato == 'AUTORIZZATA')"
+                [checked]="richiesta.Stato == 'AUTORIZZATA'" (ionChange)="changeAutorizzazione(richiesta)">
+              </ion-toggle>
+            </ion-col>
+          </ion-col>
+          <ion-button class="action-class" *ngIf="richiesta.percorsoAllegato" fill="clear" size="small" (click)="openAllegato(richiesta.percorsoAllegato)">
+            <ion-icon slot="icon-only" name="attach"></ion-icon>
+          </ion-button>
+          <ion-col class="action-class">
+          
+            
+            <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small" (click)="modifica(richiesta)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" size="small" (click)="elimina(richiesta)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small" (click)="assegnaRichiesta(richiesta.ID)" [color]="richiesta.Assegnata === 0 ? 'danger' : 'success'">
+              <ion-icon slot="icon-only" name="person-add"></ion-icon>
+            </ion-button>
+          </ion-col>
+
+          <ion-button fill="clear" (click)="infoRichiesta(richiesta)">
+            <ion-icon name="information-circle-outline"></ion-icon>
+          </ion-button>
+
+          <ion-col [style.display]="'none'">{{ richiesta.ID }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

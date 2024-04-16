@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Seleziona intervallo di date</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="display: flex; justify-content: space-between; padding: 20px;">
+    <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MM YYYY" locale="it" [(ngModel)]="startDate"></ion-datetime>
+    <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MM YYYY" locale="it" [(ngModel)]="endDate"></ion-datetime>
+  </div>
+  <div style="display: flex; justify-content: space-around; padding: 20px;">
+    <ion-button (click)="reset()">Azzera</ion-button>
+    <ion-button (click)="confirm()">Conferma</ion-button>
+    
+  </div>
+</ion-content>

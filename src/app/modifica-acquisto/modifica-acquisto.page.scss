@@ -1,0 +1,19 @@
+ion-content {
+    height: 100vh;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  form {
+    width: 100%;
+  }
+  
+  ion-label {
+    font-weight: bold;
+  }

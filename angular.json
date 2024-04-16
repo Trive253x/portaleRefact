@@ -19,6 +19,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "baseHref": "/",
             "assets": [
               {
                 "glob": "**/*",
@@ -136,7 +137,8 @@
   "cli": {
     "schematicCollections": [
       "@ionic/angular-toolkit"
-    ]
+    ],
+    "analytics": "6c6cf3db-be9e-48a2-afae-52de2bc2fd1e"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Seleziona data e ora</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-item>
+      <ion-label position="stacked">Data</ion-label>
+      <ion-input class="rounded-input" [(ngModel)]="selectedDate" (ionChange)="onDateChange($event)" type="date"></ion-input>
+    </ion-item>
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Ora di inizio</ion-label>
+        <ion-input class="rounded-input" [(ngModel)]="startTime" type="time" format="24h"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Ora di fine</ion-label>
+        <ion-input class="rounded-input" [(ngModel)]="endTime" type="time"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-item>
+      <ion-label position="stacked">Note</ion-label>
+      <ion-textarea class="rounded-input" [(ngModel)]="note" required placeholder="Note"></ion-textarea>
+    </ion-item>
+    <ion-button expand="full" (click)="closeModal()">Chiudi</ion-button>
+    <ion-button expand="full" [disabled]="!selectedDate || !startTime || !endTime || !note" (click)="execute()">Esegui</ion-button>
+  </ion-card>
+</ion-content>

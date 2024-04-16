@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl: 'https://portaleclienti.sisinformatica.it/api/model/',
+  imageUrl: 'https://portaleclienti.sisinformatica.it/source/',
+  path: '/var/www/html/Allegati/'
+
 };
 
 /*

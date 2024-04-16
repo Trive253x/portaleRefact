@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>AssegnaOperatore</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Operatori Selezionati</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let user of selectedOperatori">
+                {{user.nomeUtente}}
+                <ion-icon name="close-circle" slot="end" color="danger" (click)="removeUser(user)"></ion-icon>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Elenco Operatori</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ng-container *ngFor="let operatore of operatori">
+                <ion-item (click)="updateSelectedOperatori(operatore)" *ngIf="!operatore.selected"
+                  (mouseover)="highlight($event)" (mouseout)="unhighlight($event)">
+                  <ion-label>{{operatore.nomeUtente}}</ion-label>
+                </ion-item>
+              </ng-container>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" fill="outline" color="primary" (click)="conferma()">Conferma</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" fill="outline" color="danger" (click)="annulla()">Annulla</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>AggiungiUtente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>Nome Utente</ion-label>
+      <ion-input formControlName="nomeUtente"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Username</ion-label>
+      <ion-input formControlName="Utente"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Password</ion-label>
+      <ion-input formControlName="Password" type="password"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Sede</ion-label>
+      <ion-select formControlName="sede">
+        <ion-select-option *ngFor="let sede of sedi" [value]="sede">{{sede}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Permesso</ion-label>
+      <ion-select formControlName="Ruolo" multiple="true">
+        <ion-select-option *ngFor="let ruolo of ruoli" [value]="ruolo">{{ruolo}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="!form.valid">Aggiungi</ion-button>
+    <ion-button expand="full" (click)="dismissModal()">Annulla</ion-button>
+  </form>
+</ion-content>

@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Richiesta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content> <!-- Assicurati di avere ion-content per contenere il contenuto scorrevole -->
+  <ion-card style="margin: 5px;"> <!-- Margini applicati qui per semplificare -->
+    <div class="info-group">
+      <span class="label-class">Richiedente:</span>
+      <span>{{ richiesta.nomeUtente }}</span>
+    </div>
+    <div class="info-group">
+      <span class="label-class">Sede:</span>
+      <span>{{ richiesta.Sede }}</span>
+    </div>
+    <div class="info-group">
+      <span class="label-class">Nome PC:</span>
+      <span>{{ richiesta.NomePc }}</span>
+    </div>
+    <div class="info-group">
+      <span class="label-class">Richiesta:</span>
+      <span>{{ richiesta.Richiesta }}</span>
+    </div>
+    <div class="info-group">
+      <span class="label-class">Data richiesta:</span>
+      <span>{{ richiesta.Data }}</span>
+    </div>
+
+    <!-- Ciclo *ngFor correttamente posizionato -->
+    <div *ngFor="let r of richiestaOperatore" class="info-group-container">
+      <div class="info-group">
+        <span class="label-class">Operatore:</span>
+        <span>{{ r.nomeUtente }}</span>
+      </div>
+      <div class="info-group">
+        <span class="label-class">Data inizio:</span>
+        <span>{{ r.dataOraInizio.date | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="info-group">
+        <span class="label-class">Data fine:</span>
+        <span>{{ r.dataOraFine.date | date: 'dd/MM/yyyy HH:mm'}}</span>
+      </div>
+      <div class="info-group">
+        <span class="label-class">Note:</span>
+        <span>{{ r.note }}</span> <!-- Corretto per usare la variabile r -->
+      </div>
+    </div>
+  </ion-card>
+</ion-content>

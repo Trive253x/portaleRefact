@@ -1,0 +1,31 @@
+<ion-content [fullscreen]="true">
+
+  <div class="content-container">
+  
+    <div class="login-container">
+      <img class="login-logo" src="assets/icon/LogoSISInformatica.svg" alt="Logo SIS" />
+      <form (submit)="login()">
+        <ion-item>
+          <ion-label>Utente</ion-label>
+          <ion-input type="text" [(ngModel)]="username" name="username"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Password</ion-label>
+          <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Codice Cliente</ion-label>
+          <ion-input type="text" [(ngModel)]="customerCode" name="customerCode"></ion-input>
+        </ion-item>
+        <ion-button expand="full" type="submit">Login</ion-button>
+      </form>
+    </div>
+
+    <div class="manual-download">
+      <a href="assets/ManualeSIS-Care.docx" download>
+        <ion-icon name="document-text-outline"></ion-icon> Clicca qui per scaricare il manuale
+      </a>
+    </div>
+
+  </div>
+</ion-content>

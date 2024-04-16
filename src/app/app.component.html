@@ -1,3 +1,83 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-</ion-app>
+<ion-header *ngIf="!isLoginPage">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      {{ pageTitle }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline" color="danger"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu *ngIf="!isLoginPage" side="start" menuId="first" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Menu</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="goHome()">
+          <ion-icon name="home"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/richiesta-assistenza" routerDirection="root">
+          <ion-label>Richiesta Assistenza</ion-label>
+          <ion-icon slot="end" name="construct-outline"></ion-icon>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/elenco-richieste" routerDirection="root">
+          <ion-label>Elenco richieste</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/richiesta-acquisti" routerDirection="root">
+          <ion-label>Richiesta acquisto</ion-label>
+          <ion-icon slot="end" name="basket-outline"></ion-icon>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/elenco-acquisti" routerDirection="root">
+          <ion-label>Elenco acquisti</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-item button (click)="showSubmenu = !showSubmenu">
+        <ion-label>Amministrazione</ion-label>
+        <ion-icon slot="end" name="arrow-forward" *ngIf="!showSubmenu"></ion-icon>
+        <ion-icon slot="end" name="arrow-down" *ngIf="showSubmenu"></ion-icon>
+      </ion-item>
+      <div *ngIf="showSubmenu">
+        <ion-menu-toggle auto-hide="false">
+          <ion-item routerLink="/gestione-utenti" routerDirection="root">
+            <ion-label>Gestione Utenti</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle *ngIf="permesso.includes('7')||permesso.includes('2')||permesso.includes('1')" auto-hide="false">
+          <ion-item  routerLink="/gestione-sedi" routerDirection="root">
+            <ion-label>Gestione Sedi</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle *ngIf="permesso.includes('7')" auto-hide="false">
+          <ion-item  routerLink="/gestione-clienti" routerDirection="root">
+            <ion-label>Gestione Clienti</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </div>
+      <ion-menu-toggle *ngIf="permesso.includes('8')||permesso.includes('1')||permesso.includes('7')" auto-hide="false">
+        <ion-item routerLink="/i-miei-ric" routerDirection="root">
+          <ion-label>I Miei Ric</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-router-outlet id="main-content"></ion-router-outlet>

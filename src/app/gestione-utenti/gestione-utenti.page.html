@@ -1,0 +1,48 @@
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">GestioneUtenti</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card style="height: 600px;">
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterUsers()"></ion-searchbar>
+    <ion-grid>
+      <ion-row class="header-row" style="position: sticky; top: 0; background: white;">
+        <ion-col>Nome Utente</ion-col>
+        <ion-col>Username</ion-col>
+        <ion-col>Password</ion-col>
+        <ion-col>Sede</ion-col>
+        <ion-col>Permesso</ion-col>
+        <ion-col>Azioni</ion-col>
+      </ion-row>
+    </ion-grid>
+      <div style="height: calc(100% - 112px); overflow-y: auto;">
+        <ion-grid>
+      <ion-row *ngFor="let utente of utenti" class="data-row">
+        <ion-col *ngIf="false">{{utente.ID}}</ion-col>
+        <ion-col *ngIf="false">{{utente.Email}}</ion-col>
+        <ion-col>{{utente.nomeUtente}}</ion-col>
+        <ion-col>{{utente.Utente}}</ion-col>
+        <ion-col>{{utente.Password | password}}</ion-col>
+        <ion-col>{{utente.Sede}}</ion-col>
+        <ion-col (click)="showPopup(utente.Ruolo)">
+          {{utente.Ruolo}}
+        </ion-col>
+        <ion-col>
+          <ion-button fill="clear" (click)="modifica(utente)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf = "!permessi.includes('5')" fill="clear" color="danger" (click)="elimina(utente)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  </ion-card>
+  <ion-button  *ngIf = "!permessi.includes('5')" expand="full" (click)="presentAddUserModal()">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Aggiungi utente
+  </ion-button>
+</ion-content>

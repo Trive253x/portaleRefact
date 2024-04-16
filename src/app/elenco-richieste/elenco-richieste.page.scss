@@ -1,0 +1,56 @@
+ion-grid {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    overflow: hidden; // Aggiunto per mantenere l'ombra all'interno del bordo arrotondato
+    transition: box-shadow 0.3s ease; // Aggiunto per un'animazione morbida all'hover
+  }
+  
+  ion-grid:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); // Aggiunto per un effetto di hover
+  }
+  
+  ion-row {
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease; // Aggiunto per un'animazione morbida all'hover
+  }
+  
+  ion-row:hover {
+    background-color: #f5f5f5; // Aggiunto per un effetto di hover
+  }
+  
+  ion-row:last-child {
+    border-bottom: none;
+  }
+  
+  ion-row.ion-text-uppercase {
+    background-color: #f9f9f9;
+    color: #333; // Aggiunto per un contrasto più morbido
+  }
+
+  ion-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    text-align: center;
+    transition: color 0.3s ease; // Aggiunto per un'animazione morbida all'hover
+  }
+  
+  ion-col:hover {
+    color: #007bff; // Aggiunto per un effetto di hover
+  }
+  .hover-underline:hover {
+    text-decoration: underline;
+  }
+  .popover-width {
+    width: 60vw; /* 60% della larghezza della viewport */
+    height: 30vh; /* 30% dell'altezza della viewport */
+  }
+  .state-select {
+    margin-left: 10px;
+  }
+
+  .action-class{
+    margin-right: -20px;
+  }

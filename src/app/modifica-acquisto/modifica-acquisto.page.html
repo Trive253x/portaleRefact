@@ -1,0 +1,32 @@
+<ion-content>
+  <div class="form-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>ID</ion-label>
+      <ion-input [readonly]="true" formControlName="ID" type="text" ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nome Utente</ion-label>
+      <ion-input [readonly]="permessi.includes('2')||permessi.includes('6')" formControlName="Utente" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Descrizione</ion-label>
+      <ion-input [readonly]="permessi.includes('2')||permessi.includes('6')" formControlName="Descrizione" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sede</ion-label>
+      <ion-select [disabled]="permessi.includes('2')||permessi.includes('6')" formControlName="sede" placeholder="Seleziona Sede">
+        <ion-select-option *ngFor="let sede of sedi" [value]="sede">{{sede}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Stato</ion-label>
+      <ion-select [disabled]="isDisabled()" formControlName="Stato" placeholder="Seleziona Stato">
+        <ion-select-option *ngFor="let stato of stati" [value]="stato">{{stato}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button expand="full" type="submit" [disabled]="!form.valid">Conferma</ion-button>
+    <ion-button expand="full" (click)="dismissModal()">Annulla</ion-button>
+  </form>
+  </div>
+</ion-content>

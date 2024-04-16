@@ -1,0 +1,33 @@
+
+ion-card {
+    margin-top: 65px;
+    margin-left: 15px;
+    margin-right: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 15px;
+  }
+  
+  .header-row {
+    font-weight: bold;
+    position: sticky;
+  top: 56px;
+  background: white;
+  z-index: 100;
+  }
+  ion-row {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+  }
+  
+  ion-row.data-row {
+    transition: background-color 0.3s;
+  }
+  
+  ion-row.data-row:hover, ion-row.data-row:active {
+    background-color: #f3f3f3;
+  }
+  
+  ion-col {
+    padding: 10px;
+  }

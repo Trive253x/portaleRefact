@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    border: 1px solid #000; // Aggiunge un bordo al contenitore
+  
+    h2 {
+      margin-bottom: 20px;
+    }
+    ion-toolbar {
+      display: flex;
+        justify-content: space-between;
+    }
+    .username-label {
+        order: 2;
+      }
+    ion-list {
+      width: 100%; // Modifica questo valore per cambiare la larghezza dei campi di input
+  
+      ion-item {
+        border: 1px solid #000; // Aggiunge un bordo ai campi di input
+        margin-bottom: 10px; // Aggiunge un po' di spazio tra i campi di input
+        &:last-child {
+          margin-bottom: 0; // Remove the margin from the last item to reduce space at the bottom
+        }
+      }
+    }
+    .large-card {
+      width: 99%;
+      height: auto;
+      margin: auto;
+      padding: 10px;
+    }
+  }
+  .large-input {
+    --height: 50px; /* Aumenta questo valore per aumentare l'altezza */
+  }

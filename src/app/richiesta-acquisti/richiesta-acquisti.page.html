@@ -1,0 +1,26 @@
+<ion-content>
+  <div class="container">
+    <ion-card class="large-card">
+      <ion-card-content>
+        <h2>Ordine acquisto</h2>
+        <form #form="ngForm" (ngSubmit)="inviaAcquisto()">
+          <ion-list lines="none">
+            <ion-item>
+              <ion-label *ngIf = "(!permessi.includes('5'))&&(!permessi.includes('4'))&&(!permessi.includes('3'))" position="floating">Sede</ion-label>
+              <ion-select [(ngModel)]="sede" [disabled]="isSedeDisabled" required name="sede" #sedeModel="ngModel">
+                <ion-select-option *ngFor="let sede of sedi" [value]="sede">{{sede}}</ion-select-option>
+              </ion-select>
+              <ion-text color="danger" *ngIf="sedeModel.invalid && sedeModel.touched">Sede è obbligatorio</ion-text>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Descrizione</ion-label>
+              <ion-input type="text" [(ngModel)]="descrizione" required name="descrizione" #descrizioneModel="ngModel"></ion-input>
+              <ion-text color="danger" *ngIf="descrizioneModel.invalid && descrizioneModel.touched">La descrizione è obbligatorio</ion-text>
+            </ion-item>
+          </ion-list>
+          <ion-button expand="full" type="submit" [disabled]="form.invalid">Invia Richiesta acquisto</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

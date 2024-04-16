@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>AggiungiCliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Aggiungi Cliente</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Aggiungi il tuo form qui -->
+  <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>Codice Cliente</ion-label>
+      <ion-input formControlName="Codice_cliente"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ragione Sociale</ion-label>
+      <ion-input formControlName="Ragione_sociale"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>PIVA</ion-label>
+      <ion-input formControlName="PIVA"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Codice Fiscale</ion-label>
+      <ion-input formControlName="Codice_fiscale"></ion-input>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="danger" fill="outline" (click)="onCancel()">Annulla</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" type="submit" [disabled]="!clienteForm.valid">Conferma</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
