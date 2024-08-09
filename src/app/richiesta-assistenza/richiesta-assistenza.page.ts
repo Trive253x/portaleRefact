@@ -76,7 +76,7 @@ export class RichiestaAssistenzaPage implements OnInit {
         observable.subscribe((response: any) => {
         this.isSedeDisabled = false;
         console.log(response);
-        this.sedi = response;
+        this.sedi = response; // Store the sedi in the sedi array
       });
       });
     } else if (permessi.includes('3') || permessi.includes('4') || permessi.includes('5')) {
