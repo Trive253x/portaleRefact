@@ -36,6 +36,11 @@ export class UserService {
   setUsername(username: string): void {
     localStorage.setItem('username', username);
   }
+
+  setIdAtlante(idAtlante: any) {
+    localStorage.setItem('idAtlante', idAtlante);
+  }
+  
   getUsername(): string {
     return localStorage.getItem('username')||'';
   }

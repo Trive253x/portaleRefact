@@ -45,8 +45,8 @@
           <ion-datetime *ngIf="showCalendar" [(ngModel)]="startTime" displayFormat="HH:mm" placeholder="Ora di inizio"></ion-datetime>
           <ion-datetime *ngIf="showCalendar" [(ngModel)]="endTime" displayFormat="HH:mm" placeholder="Ora di fine"></ion-datetime>
           <ion-textarea *ngIf="showCalendar" [(ngModel)]="notes" required placeholder="Note"></ion-textarea>
-          <ion-button *ngIf="richiesta.status === 'non_iniziato'" (click)="iniziaRichiesta(richiesta)">INIZIA</ion-button>
-          <ion-button *ngIf="richiesta.status === 'inizio'" (click)="terminaRichiesta(richiesta)">TERMINA</ion-button>
+          <!--<ion-button *ngIf="richiesta.status === 'non_iniziato'" (click)="iniziaRichiesta(richiesta)">INIZIA</ion-button>
+          <ion-button *ngIf="richiesta.status === 'inizio'" (click)="terminaRichiesta(richiesta)">TERMINA</ion-button>-->
           </ion-col>
           <ion-col [style.display]="'none'">{{ richiesta.ID }}</ion-col>
         </ion-row>

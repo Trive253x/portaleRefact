@@ -6,6 +6,7 @@ import { UserService } from '../services/user.service';
 import { EseguiRicPage } from '../esegui-ric/esegui-ric.page';
 import { environment } from 'src/environments/environment';
 import { PopUpImageComponent } from '../pop-up-image/pop-up-image.component';
+import { AtlanteService } from '../services/atlante.service';
 
 @Component({
   selector: 'app-imiei-ric',
@@ -31,7 +32,8 @@ path = environment.path;
     private richiesteService: RichiesteService, 
     private alertController: AlertController, 
     private userService: UserService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private atlanteService: AtlanteService
     ) {
    } // Inietta AlertController
 
@@ -126,24 +128,44 @@ path = environment.path;
     console.log(richiesta.IDUtente);
     const modal = await this.modalController.create({
       component: EseguiRicPage,
+      cssClass: 'modal-esegui-ric',
       componentProps: {
         'selectedDate': selectedDate,
         'startTime': startTime,
         'endTime': endTime,
         'note': richiesta.note,
         'idUtente': richiesta.IDUtente,
-        'idRichiesta': richiesta.ID
+        'idRichiesta': richiesta.ID,
+        'idTipoAttivita': richiesta.IDTipoAttivita,
+        'idTipologiaAttivita': richiesta.IDTipologiaAttivita,
+        'idCommessa': richiesta.IDCommessa,
+        'PTRegID': richiesta.PTRegID,
+        'PTRegAddrID': richiesta.PTRegAddrID,
+        'PTRegAddrLocID': richiesta.PTRegAddrLocID,
+        'PTRegAddrCntID': richiesta.PTRegAddrCntID,
+        'PTRegCntBookID': richiesta.PTRegCntBookID,
+        'oggetto': richiesta.Richiesta,
       }
     });
   
     await modal.present();
   
-    const { data } = await modal.onWillDismiss();
+    let { data } = await modal.onWillDismiss();
     if(data){
       this.richiesteService.modificaRic(data).subscribe((response: any) => {
-        this.getRichieste();
-      }
-      );
+        this.atlanteService.createAttivita(data).subscribe((response: any) => {
+          data.IDAttivita = response.data;
+          this.atlanteService.createAction(data).subscribe((response: any) => {
+            data.IDAzione = response.data;
+            this.atlanteService.createRilevazione(data).subscribe((response: any) => {
+              data.IDRilevazione = response.data;
+              console.log(response);
+            });
+          });
+        });
+          this.getRichieste();
+      });
+    
     }
   }
   

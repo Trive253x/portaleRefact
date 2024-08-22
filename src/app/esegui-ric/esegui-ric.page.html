@@ -4,27 +4,98 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content (click)="onContentClick($event)">
   <ion-card>
+    <!-- Campo di autocompletamento per le commesse -->
+    <ion-item (click)="onSearchCommesseClick($event)">
+      <ion-label position="stacked">Commessa</ion-label>
+      <ion-searchbar [(ngModel)]="searchTermCommesse" search-icon="briefcase-outline" 
+                     (ionInput)="filterCommesse($event)" 
+                     (ionClear)="clearSelectedCommessa()"
+                     placeholder="Seleziona commessa" 
+                     class="custom-searchbar"></ion-searchbar>
+    </ion-item>
+    <div *ngIf="showAutocompleteCommesse && commesseFiltered.length > 0" class="autocomplete-list">
+      <ion-list>
+        <ion-item *ngFor="let item of commesseFiltered" (click)="selectCommessa(item)">
+          {{ item.displayValue }}
+        </ion-item>
+      </ion-list>
+    </div>
+<ion-row>
+    <!-- Campo di autocompletamento per il tipo di attività -->
+     <ion-col size="6">
+    <ion-item (click)="onSearchClick($event)">
+      <ion-label position="stacked">Tipo di Attività</ion-label>
+      <ion-searchbar [(ngModel)]="searchTerm" search-icon="clipboard-outline" 
+                     (ionInput)="filterTipoAttivita($event)" 
+                     (ionClear)="clearSelectedTipoAttivita()"
+                     placeholder="Seleziona tipo di attività" 
+                     class="custom-searchbar"></ion-searchbar>
+    </ion-item>
+    <div *ngIf="showAutocomplete && tipoAttivitaFiltered.length > 0" class="autocomplete-list">
+      <ion-list>
+        <ion-item *ngFor="let item of tipoAttivitaFiltered" (click)="selectTipoAttivita(item)">
+          {{ item.displayValue }}
+        </ion-item>
+      </ion-list>
+    </div>
+    </ion-col>
+
+    <!-- Campo di autocompletamento per la tipologia attività -->
+     <ion-col size="6">
+    <ion-item *ngIf="tipologiaAttivitaEnabled" (click)="onSearchTipologiaClick($event)">
+      <ion-label position="stacked">Tipologia Attività</ion-label>
+      <ion-searchbar [(ngModel)]="searchTermTipologia" search-icon="layers-outline" 
+                     (ionInput)="filterTipologiaAttivita($event)" 
+                     (ionClear)="clearSelectedTipologiaAttivita()"
+                     placeholder="Seleziona tipologia attività" 
+                     class="custom-searchbar"></ion-searchbar>
+    </ion-item>
+    <div *ngIf="showAutocompleteTipologia && tipologiaAttivitaFiltered.length > 0" class="autocomplete-list">
+      <ion-list>
+        <ion-item *ngFor="let item of tipologiaAttivitaFiltered" (click)="selectTipologiaAttivita(item)">
+          {{ item.displayValue }}
+        </ion-item>
+      </ion-list>
+    </div>
+    </ion-col>
+</ion-row>
+
+    <!-- Resto del contenuto -->
     <ion-item>
       <ion-label position="stacked">Data</ion-label>
-      <ion-input class="rounded-input" [(ngModel)]="selectedDate" (ionChange)="onDateChange($event)" type="date"></ion-input>
+      <ion-input  [(ngModel)]="selectedDate" (ionChange)="onDateChange($event)" type="date" fill="outline"></ion-input>
     </ion-item>
     <ion-list>
+      <ion-row>
+        <ion-col>
       <ion-item>
         <ion-label position="stacked">Ora di inizio</ion-label>
-        <ion-input class="rounded-input" [(ngModel)]="startTime" type="time" format="24h"></ion-input>
+        <ion-input  [(ngModel)]="startTime" type="time" format="24h" fill="outline"></ion-input>
       </ion-item>
+      </ion-col>
+      <ion-col>
       <ion-item>
         <ion-label position="stacked">Ora di fine</ion-label>
-        <ion-input class="rounded-input" [(ngModel)]="endTime" type="time"></ion-input>
+        <ion-input  [(ngModel)]="endTime" type="time" fill="outline"></ion-input>
       </ion-item>
+      </ion-col>
+      </ion-row>
     </ion-list>
     <ion-item>
       <ion-label position="stacked">Note</ion-label>
-      <ion-textarea class="rounded-input" [(ngModel)]="note" required placeholder="Note"></ion-textarea>
+      <ion-textarea  [(ngModel)]="note" required placeholder="Note" fill="outline"></ion-textarea>
     </ion-item>
-    <ion-button expand="full" (click)="closeModal()">Chiudi</ion-button>
-    <ion-button expand="full" [disabled]="!selectedDate || !startTime || !endTime || !note" (click)="execute()">Esegui</ion-button>
+    <ion-row>
+      <ion-col>
+      <ion-button expand="full" (click)="closeModal()">Chiudi</ion-button>
+      </ion-col>
+      <ion-col>
+      <ion-button expand="full" [disabled]="!selectedDate || !startTime || !endTime || !note || !selectedTipoAttivita || !selectedCommessa || (tipologiaAttivitaEnabled && !selectedTipologiaAttivita)" 
+      (click)="execute()">Esegui</ion-button>
+      </ion-col>
+    </ion-row>
+
   </ion-card>
 </ion-content>

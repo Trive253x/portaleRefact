@@ -152,13 +152,19 @@ export class RichiesteService {
     let note = data.note;
     let idOperatore = data.idUtente;
     let idRichiesta = data.idRichiesta;
+    let idTipoAttivita = data.idTipoAttivita;
+    let idTipologiaAttivita = data.idTipologiaAttivita;
+    let idCommessa = data.idCommessa;
     
     return this.http.post(this.Url10, {
       dataOraInizio: dataOraInizio,
       dataOraFine: dataOraFine,
       note: note,
       idOperatore: idOperatore,
-      idRichiesta: idRichiesta
+      idRichiesta: idRichiesta,
+      idTipoAttivita: idTipoAttivita,
+      idTipologiaAttivita: idTipologiaAttivita,
+      idCommessa: idCommessa
     });
   }
 

@@ -34,6 +34,7 @@ export class LoginService {
           console.log('ID:', data.ID);
           this.userService.setTipoUtente(data.permessi); // Imposta permesso nel localStorage
           this.userService.setID(data.ID); // Imposta ID nel localStorage
+          this.userService.setIdAtlante(data.idAtlante); // Imposta IDAtlante nel localStorage
           console.log('ID', this.userService.getID());
         }
       }),

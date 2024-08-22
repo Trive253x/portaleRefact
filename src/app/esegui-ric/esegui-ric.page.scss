@@ -2,3 +2,17 @@
     border: 1px solid #ccc;
     border-radius: 10px;
   }
+  .autocomplete-list {
+    position: absolute;
+    width: calc(100% - 32px); /* Calcola la larghezza totale meno il padding */
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1000; /* Assicurati che la lista sia sopra altri elementi */
+    margin-top: -16px; /* Optional: Può regolare il posizionamento verticale */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+
+  
