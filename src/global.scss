@@ -58,6 +58,33 @@
     font-style: italic;
 }
 
+@media (max-width: 1000px) {  /* Adjust max-width as needed for smaller screens */
+    ion-card-content {
+      font-size: 12px; /* Smaller font size for phones */
+    }
+  
+    ion-card-content ion-col {
+      font-size: 12px; /* Adjust font size for text inside columns */
+      padding: 2px;
+    }
+  
+    ion-card-content .hover-underline {
+      font-size: 12px; /* Adjust font size for hoverable text */
+    }
+  
+    ion-button {
+      font-size: 14px; /* Slightly larger font for buttons */
+    }
+  
+    pagination-controls {
+      font-size: 10px; /* Smaller font size for pagination controls */
+    }
+
+    ion-card {
+        margin: 2px;
+    }
+  }
+
 body {
     font-family: 'Poppins', sans-serif;
 }

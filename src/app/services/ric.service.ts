@@ -59,4 +59,9 @@ inviaRichiesta(sede: string, nomePc: string, richiesta: string, file?: File): Ob
   // forkJoin combinerà entrambe le richieste HTTP in un'unica Observable
   return forkJoin([postRequest1, postRequest2]);
 }
+
+getSediWithAtlanteData(): Observable<any> {
+  const url = environment.apiUrl + 'Rilevazioni/elencoSedi.php';
+  return this.http.get(url);
+}
 }

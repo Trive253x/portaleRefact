@@ -1,0 +1,156 @@
+/* Container generale del calendario */
+.calendar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Contenitore della tabella per scorrimento */
+  .table-container {
+    padding: 0px;
+    width: 100%;
+    max-width: 90vw;
+    height: 85vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .weekDay {
+    text-transform: capitalize;
+}
+  
+  /* Tabella */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Stile per l'intestazione della tabella */
+  thead th {
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    color: #4a4a4a;
+    background-color: #e3e7ed;
+    border-bottom: 2px solid #ccc;
+    position: sticky; /* Rende l'intestazione sticky */
+    top: 0; /* Fissa l'intestazione nella parte superiore durante lo scorrimento */
+    z-index: 1; /* Assicura che l'intestazione rimanga sopra il contenuto */
+}
+  
+  /* Celle del corpo della tabella */
+  tbody td {
+    border: 1px solid #e0e4e8;
+    height: 30px;
+    text-align: center;
+    vertical-align: top;
+    position: relative; /* Importante per il posizionamento delle card */
+    width: calc(100% / 8);
+  }
+  
+  /* Differenziazione tra ore piene e mezze ore */
+  .full-hour {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .half-hour {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  /* Stile per le card delle attività */
+
+  
+  .activity-card {
+    position: absolute;
+    background-color: #3498db;
+    color: #ffffff;
+    width: 100%; /* Occupa tutta la larghezza della cella */
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    left: 0px; /* Sposta leggermente a sinistra */
+    top: 0;
+  }
+  
+  .activity-card:hover {
+    transform: translateY(-5px);
+    background-color: #2980b9;
+  }
+  
+  /* Stile per il selettore del mese e della settimana */
+  .month-selector, .week-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Stile per i pulsanti di navigazione */
+  ion-button {
+    --color: rgb(0, 0, 0);
+    transition: background-color 0.3s ease;
+  }
+ 
+  
+  /* Stile per il testo del mese e della settimana */
+  .month-selector span, .week-selector span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 15px;
+  }
+  
+  /* Stile per i giorni della settimana */
+  .week-selector span {
+    font-size: 14px;
+    font-weight: normal;
+    color: #555;
+    margin: 0 5px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .calendar-container {
+      padding: 10px;
+    }
+  
+    .table-container {
+      height: 60vh;
+    }
+  
+    .month-selector span, .week-selector span {
+      font-size: 14px;
+    }
+  
+    .activity-card {
+      font-size: 12px;
+    }
+  }
+
+  .activity-cell {
+    background-color: #3498db;
+    color: #ffffff;
+    text-align: center;
+    vertical-align: middle; /* Per allineare il testo al centro della cella espansa */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .activity-cell {
+    border-bottom: none; /* Rimuove il bordo inferiore della cella */
+  }
+
+  td {
+    border: 1px solid #e0e4e8;
+  }
+
+
+  

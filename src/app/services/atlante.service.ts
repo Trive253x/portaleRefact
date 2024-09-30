@@ -40,4 +40,8 @@ export class AtlanteService {
   createRilevazione(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}Rilevazione.php`, data);
   }
+
+  getActivityForUser(idAtlante: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}getAttivitaUtente.php?idAtlante=${idAtlante}`);
+  }
 }

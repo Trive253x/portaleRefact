@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AtlanteService } from '../services/atlante.service';
+import { AssistenzaService } from '../services/ric.service';
 
 @Component({
   selector: 'app-calendar-modal',
@@ -24,7 +25,13 @@ export class EseguiRicPage implements OnInit {
   @Input() PTRegAddrCntID: number = 0;
   @Input() PTRegCntBookID: number = 0;
   @Input() oggetto: string = '';
-  
+  @Input() sedeAtlante: string = '';
+  @Input() descrizione: string = '';
+  @Input() IDAttivita: string = '';
+  @Input() IDAzione: string = ''; 
+  @Input() IDRilevazione: string = '';
+  @Input() IDRichiestaAssegnata: number = 0;
+
   tipoAttivita: any[] = [];
   tipoAttivitaFiltered: any[] = [];
   searchTerm: string = '';
@@ -44,13 +51,55 @@ export class EseguiRicPage implements OnInit {
   selectedCommessa: any = null;
   showAutocompleteCommesse: boolean = false;
 
+  sedi: any[] = [];
+  sediFiltered: any[] = [];
+  searchTermSede: string = '';
+  selectedSede: any = null;
+  showAutocompleteSede: boolean = false;
+
   constructor(
-    private modalController: ModalController, private atlanteService: AtlanteService
+    private modalController: ModalController, private atlanteService: AtlanteService, 
+    private assistenzaService: AssistenzaService
   ) { }
 
-  ngOnInit(){
-    console.log(this.idTipoAttivita, this.idTipologiaAttivita, this.idCommessa);
-  
+  ngOnInit() {console.log(this.sedeAtlante);
+    console.log("Richiesta" + this.idRichiesta);
+    if (this.idRichiesta === '' || this.idRichiesta === null || this.idRichiesta === undefined || !this.idRichiesta) {
+      this.assistenzaService.getSediWithAtlanteData().subscribe((data) => {
+        console.log(data);
+        this.sedi = data.map((item: any) => ({
+          id: item.ID,
+          codiceCliente: item.Codice_cliente,
+          codiceSede: item.Codice_sede,
+          PTRegID: item.PTRegID,
+          PTRegAddrID: item.PTRegAddrID,
+          PTRegAddrCntID: item.PTRegAddrCntID,
+          PTRegAddrLocID: item.PTRegAddrLocID,
+          PTRegCntBookID: item.PTRegCntBookID,
+          sede: item.Sede,
+          displayValue: `${item.Codice_sede} - ${item.Sede}`
+        }));
+        this.sediFiltered = [...this.sedi];
+        if(this.sedeAtlante){
+          console.log(this.sedeAtlante);
+          console.log(this.sedi);
+          this.selectedSede = this.sedi.find((item) => item.sede === this.sedeAtlante);
+          console.log('SEDE =' + this.selectedSede);
+          if (this.selectedSede) {
+            this.searchTermSede = this.selectedSede.displayValue;
+            this.selectSede(this.selectedSede);
+          }
+        }
+      });
+
+     
+        
+
+      
+    }
+
+    
+
     this.atlanteService.getTipoAttivita().subscribe((data) => {
       this.tipoAttivita = data.map((item: { PTBRMActvTypeID: any; Code: any; Descr: any; }) => ({
         id: item.PTBRMActvTypeID,
@@ -59,17 +108,16 @@ export class EseguiRicPage implements OnInit {
         displayValue: `${item.Code} - ${item.Descr}`
       }));
       this.tipoAttivitaFiltered = [...this.tipoAttivita];
-  
-      if (this.idTipoAttivita){
+
+      if (this.idTipoAttivita) {
         this.selectedTipoAttivita = this.tipoAttivita.find((item) => item.id === parseInt(this.idTipoAttivita));
-        if(this.selectedTipoAttivita){
-          this.searchTerm = this.selectedTipoAttivita.displayValue; // Aggiorna il campo di ricerca
+        if (this.selectedTipoAttivita) {
+          this.searchTerm = this.selectedTipoAttivita.displayValue;
           this.getTipologiaAttivita(this.selectedTipoAttivita);
-          
         }
       }
     });
-  
+
     this.atlanteService.getCommesse().subscribe((data) => {
       this.commesse = data.map((item: { PTPrjID: number; PrjCode: string; Descr: any; }) => ({
         id: item.PTPrjID,
@@ -78,14 +126,52 @@ export class EseguiRicPage implements OnInit {
         displayValue: `${item.PrjCode} - ${item.Descr}`
       }));
       this.commesseFiltered = [...this.commesse];
-  
-      if (this.idCommessa){
+
+      if (this.idCommessa) {
         this.selectedCommessa = this.commesse.find((item) => item.id === parseInt(this.idCommessa));
-        if(this.selectedCommessa){
-          this.searchTermCommesse = this.selectedCommessa.displayValue; // Aggiorna il campo di ricerca
+        if (this.selectedCommessa) {
+          this.searchTermCommesse = this.selectedCommessa.displayValue;
         }
       }
     });
+  }
+
+  filterSedi(event: any) {
+    const searchTerm = event.detail.value.toLowerCase();
+    if (searchTerm && searchTerm.trim() !== '') {
+      this.sediFiltered = this.sedi.filter((item) => {
+        return (
+          item.codiceCliente.toLowerCase().includes(searchTerm) ||
+          item.sede.toLowerCase().includes(searchTerm)
+        );
+      });
+      this.showAutocompleteSede = true;
+    } else {
+      this.sediFiltered = [];
+      this.showAutocompleteSede = false;
+    }
+  }
+
+  selectSede(item: any) {
+    this.selectedSede = item;
+    console.log(this.selectedSede);
+    this.searchTermSede = item.displayValue;
+    this.sediFiltered = []; // Nascondi la lista una volta selezionato un elemento
+    this.showAutocompleteSede = false;
+
+    // Assign values to the corresponding variables
+    this.PTRegID = item.PTRegID;
+    this.PTRegAddrID = item.PTRegAddrID;
+    this.PTRegAddrLocID = item.PTRegAddrLocID;
+    this.PTRegAddrCntID = item.PTRegAddrCntID;
+    this.PTRegCntBookID = item.PTRegCntBookID;
+  }
+
+  clearSelectedSede() {
+    this.selectedSede = null;
+    this.searchTermSede = '';
+    this.sediFiltered = [];
+    this.showAutocompleteSede = false;
   }
 
   filterCommesse(event: any) {
@@ -102,6 +188,11 @@ export class EseguiRicPage implements OnInit {
       this.commesseFiltered = [];
       this.showAutocompleteCommesse = false;
     }
+  }
+
+  onSearchSedeClick(event: any) {
+    event.stopPropagation();
+    this.showAutocompleteSede = true;
   }
 
   selectCommessa(item: any) {
@@ -122,6 +213,8 @@ export class EseguiRicPage implements OnInit {
     event.stopPropagation();
     this.showAutocompleteCommesse = true;
   }
+
+  
 
   filterTipoAttivita(event: any) {
     const searchTerm = event.detail.value.toLowerCase();
@@ -150,7 +243,9 @@ export class EseguiRicPage implements OnInit {
   getTipologiaAttivita(item: any) {
     this.atlanteService.getTipologiaAttivita(item.id).subscribe((data) => {
       this.tipologiaAttivitaEnabled = true;
-      this.tipologiaAttivita = data.map((item: { PTBRMActvTypeTypeID: any; Code: any; Descr: any; SurveyTypeCode: string }) => ({
+      this.tipologiaAttivita = data.map((item: { PTBRMActvTypeTypeID: any; Code: any; Descr: any; SurveyTypeCode: string; PTBRMSurveyTypeID: number;
+       }) => ({
+        PTBRMSurveyTypeID: item.PTBRMSurveyTypeID,
         id: item.PTBRMActvTypeTypeID,
         code: item.SurveyTypeCode,
         description: item.Descr,
@@ -238,7 +333,7 @@ export class EseguiRicPage implements OnInit {
 
   onDateChange(event: any) {
     if (event.detail && event.detail.value) {
-      this.selectedDate = formatDate(event.detail.value, 'dd/MM/yyyy', 'en-US');
+      this.selectedDate = formatDate(event.detail.value, 'dd/MM/yyyy', 'it-IT');
     }
   }
 
@@ -247,6 +342,7 @@ export class EseguiRicPage implements OnInit {
   }
 
   execute() {
+    console.log(this.selectedTipologiaAttivita);
     this.modalController.dismiss({
       'selectedDate': this.selectedDate,
       'startTime': this.startTime,
@@ -262,8 +358,15 @@ export class EseguiRicPage implements OnInit {
       'PTRegAddrLocID': this.PTRegAddrLocID,
       'PTRegAddrCntID': this.PTRegAddrCntID,
       'PTRegCntBookID': this.PTRegCntBookID,
-      'oggetto': this.oggetto,
-      'PTUserID': localStorage.getItem('idAtlante')
+      'oggetto': this.oggetto ?? this.descrizione,
+      'PTUserID': localStorage.getItem('idAtlante'),
+      'sede': this.selectedSede?.sede ? this.selectedSede.sede : '',
+      'descrizione': this.descrizione ?? this.oggetto,
+      'IDAzione': this.IDAzione,
+      'IDRilevazione': this.IDRilevazione,
+      'IDAttivita': this.IDAttivita,
+      'IDRichiestaAssegnata': this.IDRichiestaAssegnata,
+      'PTBRMSurveyTypeID': this.selectedTipologiaAttivita.PTBRMSurveyTypeID
     });
   }
 }

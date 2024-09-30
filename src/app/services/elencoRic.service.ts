@@ -24,6 +24,7 @@ export class RichiesteService {
   private Url10 = environment.apiUrl + 'Operatore/modificaRic.php';
   private Url11 = environment.apiUrl + 'Operatore/getRic.php';
   private Url12 = environment.apiUrl + 'Operatore/getRichiestaOperatoreInfo.php';
+  private Url13 = environment.apiUrl + 'Operatore/inserisciNuovaRic.php';
 
   modalClosed = new EventEmitter<void>();
   richieste: any[] = [];
@@ -147,6 +148,7 @@ export class RichiesteService {
   }
 
   modificaRic(data: any): Observable<any> {
+    console.log(data);
     let dataOraInizio = data.selectedDate + ' ' + data.startTime;
     let dataOraFine = data.selectedDate + ' ' + data.endTime;
     let note = data.note;
@@ -155,6 +157,34 @@ export class RichiesteService {
     let idTipoAttivita = data.idTipoAttivita;
     let idTipologiaAttivita = data.idTipologiaAttivita;
     let idCommessa = data.idCommessa;
+    let sede = data.sede;
+    let idUtente = this.userService.getID();
+    let descrizione = data.descrizione;
+    let IDAttivita = data.IDAttivita;
+    let IDAzione = data.IDAzione;
+    let IDRilevazione = data.IDRilevazione;
+    let ID = data.IDRichiestaAssegnata;
+
+    if(ID == '' || ID == null){
+      return this.http.post(this.Url13, {
+        dataOraInizio: dataOraInizio,
+        dataOraFine: dataOraFine,
+        note: note,
+        idOperatore: idOperatore,
+        idRichiesta: idRichiesta,
+        idTipoAttivita: idTipoAttivita,
+        idTipologiaAttivita: idTipologiaAttivita,
+        idCommessa: idCommessa,
+        idUtente: idUtente,
+        sede: sede,
+        descrizione: descrizione,
+        IDAttivita: IDAttivita,
+        IDAzione: IDAzione,
+        IDRilevazione: IDRilevazione,
+        ID: ID
+      });
+    }else{
+
     
     return this.http.post(this.Url10, {
       dataOraInizio: dataOraInizio,
@@ -164,8 +194,14 @@ export class RichiesteService {
       idRichiesta: idRichiesta,
       idTipoAttivita: idTipoAttivita,
       idTipologiaAttivita: idTipologiaAttivita,
-      idCommessa: idCommessa
+      idCommessa: idCommessa,
+      IDAttivita: IDAttivita,
+      IDAzione: IDAzione,
+      IDRilevazione: IDRilevazione,
+      descrizione: descrizione,
+      ID: ID
     });
+  }
   }
 
   getRic(idUtente: any , idRichiesta: any): Observable<any>{

@@ -1,18 +1,40 @@
 .rounded-input {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-  }
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.autocomplete-list {
+  position: absolute;
+  width: calc(100% - 32px);
+  max-height: 200px; /* Reduced max height for smaller screens */
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  margin-top: -16px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
   .autocomplete-list {
-    position: absolute;
-    width: calc(100% - 32px); /* Calcola la larghezza totale meno il padding */
-    max-height: 150px;
-    overflow-y: auto;
-    background-color: white;
-    border: 1px solid #ccc;
-    z-index: 1000; /* Assicurati che la lista sia sopra altri elementi */
-    margin-top: -16px; /* Optional: Può regolare il posizionamento verticale */
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 150px; /* Further reduce max height */
+    margin-top: -8px; /* Adjust margin to avoid overlap */
   }
 
+  ion-item {
+    margin-bottom: 10px; /* Reduce margin for compact spacing */
+  }
 
-  
+  ion-button {
+    margin: 5px 0; /* Adjust button spacing */
+  }
+
+  ion-card {
+    padding: 8px; /* Reduce padding on smaller screens */
+  }
+
+  .custom-searchbar {
+    --padding-start: 8px; /* Adjust searchbar padding */
+  }
+}

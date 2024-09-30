@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Calendario Attività</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="month-selector">
+    <ion-button (click)="previousMonth()" fill="clear">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <span class="weekDay">{{ currentMonth | date: 'MMMM yyyy' }}</span>
+    <ion-button (click)="nextMonth()" fill="clear">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <div class="week-selector">
+    <!--<span *ngFor="let day of weekDays" class="weekDay">{{ day.date | date: 'EEEE d MMMM' }}</span>-->
+  </div>
+
+  <div class="calendar-container">
+    <ion-button (click)="previousWeek()" fill="clear">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <div #table class="table-container" onload="windows.scroll(0,400)">
+      <table >
+        <thead>
+          <tr>
+            <th></th>
+            <th *ngFor="let day of weekDays" class="weekDay">{{ day.date | date: 'EEEE d MMM' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hour of displayedHours; let i = index">
+            <td [ngClass]="{'full-hour': hour.endsWith(':00'), 'half-hour': hour.endsWith(':30')}">{{ hour }}</td>
+            <ng-container *ngFor="let day of weekDays">
+              <td [ngClass]="{'activity-cell': getActivity(day.date, hour)}" style="position: relative;">
+                <div *ngIf="getActivity(day.date, hour)" 
+                     class="activity-card"
+                     [ngStyle]="{
+                       'top': calculateCardTop(getActivity(day.date, hour)?.startHour),
+                       'height': calculateCardHeight(getActivity(day.date, hour)?.startHour, getActivity(day.date, hour)?.endHour)
+                     }">
+                  {{ getActivity(day.date, hour)?.name }}
+                </div>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ion-button (click)="nextWeek()" fill="clear">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+</ion-content>

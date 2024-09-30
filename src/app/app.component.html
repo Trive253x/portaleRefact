@@ -76,6 +76,11 @@
           <ion-label>I Miei Ric</ion-label>
         </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle *ngIf="permesso.includes('8')||permesso.includes('1')||permesso.includes('7')" auto-hide="false">
+        <ion-item routerLink="/calendario-attivita" routerDirection="root">
+          <ion-label>Calendario Attività</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
     </ion-list>
   </ion-content>
 </ion-menu>

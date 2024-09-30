@@ -6,7 +6,7 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <ion-card>
-    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRichieste()"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRichieste()" placeholder="Cerca..."></ion-searchbar>
   </ion-card>
   <ion-card>
     <ion-grid>
@@ -30,9 +30,9 @@
         <ion-col><strong>Azioni</strong></ion-col>
       </ion-row>
     </ion-grid>
-    <ion-card-content style="height: 80vh; overflow-y: auto;">
+    <ion-card-content>
       <ion-grid>
-        <ion-row *ngFor="let richiesta of richieste">
+        <ion-row *ngFor="let richiesta of richieste | filterBy: ['nomeUtente', 'Richiesta', 'NomePc', 'Stato', 'Sede', 'Data']: searchTerm | paginate: { itemsPerPage: itemsPerPage, currentPage: p }">
           <ion-col>{{ richiesta.nomeUtente }}</ion-col>
           <ion-col>{{ richiesta.Sede }}</ion-col>
           <ion-col>{{ richiesta.NomePc }}</ion-col>
@@ -51,8 +51,6 @@
             <ion-icon slot="icon-only" name="attach"></ion-icon>
           </ion-button>
           <ion-col class="action-class">
-          
-            
             <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small" (click)="modifica(richiesta)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-button>
@@ -71,6 +69,14 @@
           <ion-col [style.display]="'none'">{{ richiesta.ID }}</ion-col>
         </ion-row>
       </ion-grid>
+      <!-- Pagination Controls -->
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <pagination-controls (pageChange)="p = $event"
+          [previousLabel]="getLangLabels().previousPageLabel"
+                           [nextLabel]="getLangLabels().nextPageLabel"></pagination-controls>
+        </ion-col>
+      </ion-row>
     </ion-card-content>
   </ion-card>
 </ion-content>

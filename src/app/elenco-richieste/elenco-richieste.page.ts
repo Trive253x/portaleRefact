@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { RichiesteService } from '../services/elencoRic.service';
-import { AlertController } from '@ionic/angular'; // Importa AlertController
+import { AlertController } from '@ionic/angular';
 import { UserService } from '../services/user.service';
 import { NavController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -10,6 +10,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { PopUpImageComponent } from '../pop-up-image/pop-up-image.component';
 import { PopUpRichiesteInfoComponent } from '../pop-up-richieste-info/pop-up-richieste-info.component';
 import { PopoverController } from '@ionic/angular';
+
+import { paginationLangIt } from '../translate/pagination-lang.it';
+
 @Component({
   selector: 'app-elenco-richieste',
   templateUrl: './elenco-richieste.page.html',
@@ -21,10 +24,12 @@ export class ElencoRichiestePage implements OnInit {
   searchTerm = '';
   richieste2: any[] = []; // I tuoi dati richiesta
   selectedStato = '';
-
   imageUrl = environment.imageUrl;
   path = environment.path;
   richiestaOperatore: any[] = [];
+  p: number = 1; // Current page number
+  itemsPerPage: number = 10; // Default items per page
+
   constructor(
     private router: Router, 
     private navController: NavController, 
@@ -38,32 +43,51 @@ export class ElencoRichiestePage implements OnInit {
     this.permesso = this.userService.getTipoUtente();
    } // Inietta AlertController
 
-   ngOnInit() {
+  ngOnInit() {
     this.getRichieste();
+    this.calculateItemsPerPage(); // Calculate initial items per page
     this.richiesteService.modalClosed.subscribe(() => {
       this.ngOnInit();
     });
   }
+
+  getLangLabels() {
+    return paginationLangIt;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.calculateItemsPerPage(); // Recalculate items per page on window resize
+  }
+
+  calculateItemsPerPage() {
+    const vh = window.innerHeight; // Get the viewport height
+    const itemHeight = 100; // Average height for each item row in pixels
+    const headerFooterHeight = 150; // Adjust for header/footer height in pixels
+    this.itemsPerPage = Math.floor((vh - headerFooterHeight) / itemHeight); // Calculate items per page
+  }
+
   getRichieste() {
     this.richiesteService.getRichieste().subscribe((response: any) => {
       this.richieste = response;
       this.richieste2 = response;
-    }
-    );
+    });
   }
+
   onConfermaPressed() {
     this.getRichieste();
   }
+
   truncate(text: string, length: number): string {
     return text.length > length ? text.substring(0, length) + '...' : text;
   }
+
   async mostraRichiestaCompleta(richiesta: any) {
     const alert = await this.alertController.create({
       header: 'Richiesta completa',
       message: richiesta.Richiesta,
       buttons: ['OK']
     });
-  
     await alert.present();
   }
 
@@ -77,7 +101,6 @@ export class ElencoRichiestePage implements OnInit {
       richiesta.Stato.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.Sede.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.Data.toLowerCase().includes(lowerCaseSearchTerm)
-      // Aggiungi qui altre proprietà di richiesta se necessario
     );
   }
 
@@ -108,8 +131,6 @@ export class ElencoRichiestePage implements OnInit {
         }
       ]
     });
-    
-
     await alert.present();
   }
 
@@ -122,23 +143,23 @@ export class ElencoRichiestePage implements OnInit {
     });
     return await modal.present();
   }
-  
+
   changeAutorizzazione(richiesta: any) {
     if(richiesta.Stato == 'DA AUTORIZZARE'){
       richiesta.Stato = 'AUTORIZZATA';
       this.richiesteService.updateStato(richiesta);
-    }else if(richiesta.Stato == 'AUTORIZZATA'){
+    } else if(richiesta.Stato == 'AUTORIZZATA'){
       richiesta.Stato = 'DA AUTORIZZARE';
       this.richiesteService.updateStato(richiesta);
     }
   }
-  
+
   getColor(stato: string) {
     switch (stato) {
       case 'RISOLTA':
         return 'green';
-        case 'IN ELABORAZIONE':
-          return '#DAA520';
+      case 'IN ELABORAZIONE':
+        return '#DAA520';
       case 'DA AUTORIZZARE':
         return 'orange';
       case 'AUTORIZZATA':
@@ -157,23 +178,21 @@ export class ElencoRichiestePage implements OnInit {
       this.richieste = this.richieste2.filter(richiesta => richiesta.Stato === this.selectedStato);
     }
   }
-  
-  
+
   openAllegato(percorso: string) {
     const extension = percorso.split('.').pop() || '';
     let path = percorso.replace(this.path, this.imageUrl);
     console.log(path);
-  
+
     if (['jpg', 'jpeg', 'png', 'gif', 'PNG'].includes(extension)) {
       this.PopUpImage(path);
     } else {
-      // Per i file non immagine, utilizza direttamente l'URL senza DomSanitizer
       const link = document.createElement('a');
-      document.body.appendChild(link); // Aggiungi al DOM per assicurare il funzionamento
+      document.body.appendChild(link);
       link.href = path;
-      link.download = path.split('/').pop() || 'downloaded_file'; // Imposta un nome file di default
+      link.download = path.split('/').pop() || 'downloaded_file';
       link.click();
-      document.body.removeChild(link); // Rimuovi dopo il click
+      document.body.removeChild(link);
     }
   }
 

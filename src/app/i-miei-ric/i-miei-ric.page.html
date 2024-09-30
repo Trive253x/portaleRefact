@@ -1,56 +1,77 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>IMieiRic</ion-title>
+    <ion-title>I Miei Richieste</ion-title> <!-- Translated Title -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <ion-card>
-    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRichieste()"></ion-searchbar>
+    <ion-grid>
+    <ion-row>
+      <!-- Searchbar Column -->
+      <ion-col size="9" size-sm="6" size-xs="6">
+        <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRichieste()" placeholder="Cerca..."></ion-searchbar>
+      </ion-col>
+    
+      <!-- Button Column -->
+      <ion-col size="3" size-sm="6" size-xs="6">
+        <ion-button (click)="openNewRichiesta()" expand="block">
+          <ion-icon slot="start" name="add-circle"></ion-icon>
+          Nuova Registrazione
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    </ion-grid>
   </ion-card>
   <ion-card>
     <ion-grid>
       <ion-row>
         <ion-col><strong>Utente</strong></ion-col>
         <ion-col><strong>Sede</strong></ion-col>
-        <ion-col><strong>Nome Pc</strong></ion-col>
+        <ion-col><strong>Nome PC</strong></ion-col>
         <ion-col><strong>Richiesta</strong></ion-col>
         <ion-col><strong>Data</strong></ion-col>
         <ion-col><strong>Stato</strong></ion-col>
         <ion-col><strong>Azioni</strong></ion-col>
       </ion-row>
     </ion-grid>
-    <ion-card-content style="height: 80vh; overflow-y: auto;">
+    <ion-card-content>
       <ion-grid>
-        <ion-row *ngFor="let richiesta of richieste">
-          <ion-col>{{ richiesta.nomeUtente }}</ion-col>
-          <ion-col>{{ richiesta.Sede }}</ion-col>
+        <ion-row
+          *ngFor="let richiesta of richieste | filterBy: ['nomeUtente', 'Richiesta', 'NomePc', 'Stato', 'Sede', 'Data']: searchTerm | paginate: { itemsPerPage: itemsPerPage, currentPage: p }">
+          <ion-col *ngIf="richiesta.nomeUtente">{{ richiesta.nomeUtente }}</ion-col>
+          <ion-col *ngIf="!richiesta.nomeUtente">{{ richiesta.NomeUtenteAtlante }}</ion-col>
+          <ion-col *ngIf="richiesta.Sede">{{ richiesta.Sede }}</ion-col>
+          <ion-col *ngIf="!richiesta.Sede">{{ richiesta.SedeAtlante }}</ion-col>
           <ion-col>{{ richiesta.NomePc }}</ion-col>
           <ion-col (click)="mostraRichiestaCompleta(richiesta)">
-            <span class="hover-underline">{{ truncate(richiesta.Richiesta, 15) }}</span>
+            <span *ngIf="richiesta.Descrizione" class="hover-underline">{{ truncate(richiesta.Descrizione, 15) }}</span>
+            <span *ngIf="!richiesta.Descrizione" class="hover-underline">{{ truncate(richiesta.Richiesta, 15) }}</span>
           </ion-col>
-          <ion-col>{{ richiesta.Data }}</ion-col>
-          <ion-col [ngStyle]="{'color': getColor(richiesta.Stato)}">{{ richiesta.Stato | uppercase}}
-          </ion-col>
-          
+          <ion-col *ngIf="richiesta.Data">{{ richiesta.Data }}</ion-col>
+          <ion-col *ngIf="!richiesta.Data">{{ richiesta.dataOraInizio.date | date: 'dd/MM/yyyy HH:mm' }}</ion-col>
+          <ion-col *ngIf="richiesta.Stato" [ngStyle]="{'color': getColor(richiesta.Stato)}">{{ richiesta.Stato | uppercase }}</ion-col>
+          <ion-col *ngIf="!richiesta.Stato" [ngStyle]="{'color': getColor('RISOLTA')}">{{ 'RISOLTA' | uppercase }}</ion-col>
           <ion-col>
-            <ion-button *ngIf="richiesta.percorsoAllegato" fill="clear" size="small" (click)="openAllegato(richiesta.percorsoAllegato)">
+            <ion-button *ngIf="richiesta.percorsoAllegato" fill="clear" size="small"
+              (click)="openAllegato(richiesta.percorsoAllegato)">
               <ion-icon slot="icon-only" name="attach"></ion-icon>
             </ion-button>
             <ion-button fill="clear" (click)="openCalendar(richiesta)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-button>
-
-          <ion-datetime *ngIf="showCalendar" [(ngModel)]="selectedDate" displayFormat="DD/MM/YYYY"></ion-datetime>
-          <ion-datetime *ngIf="showCalendar" [(ngModel)]="startTime" displayFormat="HH:mm" placeholder="Ora di inizio"></ion-datetime>
-          <ion-datetime *ngIf="showCalendar" [(ngModel)]="endTime" displayFormat="HH:mm" placeholder="Ora di fine"></ion-datetime>
-          <ion-textarea *ngIf="showCalendar" [(ngModel)]="notes" required placeholder="Note"></ion-textarea>
-          <!--<ion-button *ngIf="richiesta.status === 'non_iniziato'" (click)="iniziaRichiesta(richiesta)">INIZIA</ion-button>
-          <ion-button *ngIf="richiesta.status === 'inizio'" (click)="terminaRichiesta(richiesta)">TERMINA</ion-button>-->
           </ion-col>
           <ion-col [style.display]="'none'">{{ richiesta.ID }}</ion-col>
         </ion-row>
       </ion-grid>
+      <!-- Pagination Controls -->
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <pagination-controls (pageChange)="p = $event" [previousLabel]="getLangLabels().previousPageLabel"
+            [nextLabel]="getLangLabels().nextPageLabel"></pagination-controls>
+        </ion-col>
+      </ion-row>
+
     </ion-card-content>
   </ion-card>
 </ion-content>

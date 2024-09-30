@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgPipesModule } from 'ngx-pipes';
 import { IonicModule } from '@ionic/angular';
 import { PopUpRichiesteInfoModule } from '../pop-up-richieste-info/pop-up-richieste-info.module';
 import { ElencoRichiestePageRoutingModule } from './elenco-richieste-routing.module';
@@ -17,7 +18,9 @@ import { PopUpImageModule } from '../pop-up-image/pop-up-image.module';
     IonicModule,
     ElencoRichiestePageRoutingModule,
     PopUpImageModule,
-    PopUpRichiesteInfoModule
+    PopUpRichiesteInfoModule,
+    NgxPaginationModule,
+    NgPipesModule
   ],
   declarations: [ElencoRichiestePage]
 })

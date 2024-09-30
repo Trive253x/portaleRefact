@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { RichiesteService } from '../services/elencoRic.service';
@@ -7,6 +7,7 @@ import { EseguiRicPage } from '../esegui-ric/esegui-ric.page';
 import { environment } from 'src/environments/environment';
 import { PopUpImageComponent } from '../pop-up-image/pop-up-image.component';
 import { AtlanteService } from '../services/atlante.service';
+import { paginationLangIt } from '../translate/pagination-lang.it';
 
 @Component({
   selector: 'app-imiei-ric',
@@ -18,13 +19,16 @@ export class IMieiRicPage implements OnInit {
   searchTerm = '';
   richieste2: any[] = []; // I tuoi dati richiesta
   showCalendar = false;
-selectedDate: string = '';
-startTime: string = '';
-endTime: string = '';
-notes: string = '';
-statoRichiesta = '';
-imageUrl = environment.imageUrl;
-path = environment.path;
+  selectedDate: string = '';
+  startTime: string = '';
+  endTime: string = '';
+  notes: string = '';
+  statoRichiesta = '';
+  imageUrl = environment.imageUrl;
+  path = environment.path;
+  p: number = 1;  // Current page number
+  totalPages: number = 0; // Total pages for pagination
+  itemsPerPage: number = 10; // Default items per page
 
   constructor(
     private router: Router, 
@@ -39,17 +43,36 @@ path = environment.path;
 
    ngOnInit() {
     this.getRichieste();
+    this.calculateItemsPerPage(); // Calculate initial items per page
     this.richiesteService.modalClosed.subscribe(() => {
       this.ngOnInit();
     });
   }
+
+  getLangLabels() {
+    return paginationLangIt;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.calculateItemsPerPage(); // Recalculate items per page on window resize
+  }
+
+  calculateItemsPerPage() {
+    const vh = window.innerHeight; // Get the viewport height
+    const itemHeight = 100; // Average height for each item row in vh units
+    const headerFooterHeight = 150; // Adjust for header/footer height in vh units
+    this.itemsPerPage = Math.floor((vh - headerFooterHeight) / itemHeight); // Calculate items per page
+    this.totalPages = Math.ceil(this.richieste.length / this.itemsPerPage); // Update total pages based on the new items per page
+  }
+
   getRichieste() {
     this.richiesteService.getRicOperatore().subscribe((response: any) => {
-      console.log(response);
       this.richieste = response;
+      console.log(response);  
       this.richieste2 = response;
-    }
-    );
+      this.totalPages = Math.ceil(this.richieste.length / this.itemsPerPage); // Calculate total pages based on dynamic itemsPerPage
+    });
   }
 
  getStato(richiesta: any) {
@@ -63,9 +86,15 @@ path = environment.path;
     return text.length > length ? text.substring(0, length) + '...' : text;
   }
   async mostraRichiestaCompleta(richiesta: any) {
+    let message = '';
+    if (richiesta.Descrizione){
+       message = richiesta.Descrizione;
+    } else {
+       message = richiesta.Richiesta
+    }
     const alert = await this.alertController.create({
       header: 'Richiesta completa',
-      message: richiesta.Richiesta,
+      message: message,
       buttons: ['OK']
     });
   
@@ -75,15 +104,15 @@ path = environment.path;
   filterRichieste() {
     const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
 
-    this.richieste = this.richieste2.filter(richiesta =>
+    this.richieste = this.richieste2.filter((richiesta) =>
       richiesta.nomeUtente.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.Richiesta.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.NomePc.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.Stato.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.Sede.toLowerCase().includes(lowerCaseSearchTerm) ||
       richiesta.Data.toLowerCase().includes(lowerCaseSearchTerm)
-      // Aggiungi qui altre proprietà di richiesta se necessario
     );
+    this.totalPages = Math.ceil(this.richieste.length / 10); // Update total pages after filtering
   }
 
   
@@ -122,10 +151,7 @@ path = environment.path;
     } else {
       endTime = '';
     }
-    console.log(startTime);
-    console.log(endTime);
-    console.log(richiesta.note);
-    console.log(richiesta.IDUtente);
+    console.log(richiesta);
     const modal = await this.modalController.create({
       component: EseguiRicPage,
       cssClass: 'modal-esegui-ric',
@@ -145,6 +171,12 @@ path = environment.path;
         'PTRegAddrCntID': richiesta.PTRegAddrCntID,
         'PTRegCntBookID': richiesta.PTRegCntBookID,
         'oggetto': richiesta.Richiesta,
+        'sedeAtlante': richiesta.SedeAtlante,
+        'descrizione': richiesta.Descrizione,
+        'IDAttivita': richiesta.IDAttivita,
+        'IDAzione': richiesta.IDAzione,
+        'IDRilevazione': richiesta.IDRilevazione,
+        'IDRichiestaAssegnata': richiesta.IDRichiestaAssegnata
       }
     });
   
@@ -152,13 +184,13 @@ path = environment.path;
   
     let { data } = await modal.onWillDismiss();
     if(data){
-      this.richiesteService.modificaRic(data).subscribe((response: any) => {
         this.atlanteService.createAttivita(data).subscribe((response: any) => {
           data.IDAttivita = response.data;
           this.atlanteService.createAction(data).subscribe((response: any) => {
             data.IDAzione = response.data;
             this.atlanteService.createRilevazione(data).subscribe((response: any) => {
               data.IDRilevazione = response.data;
+              this.richiesteService.modificaRic(data).subscribe((response: any) => {
               console.log(response);
             });
           });
@@ -287,6 +319,38 @@ const dateTime = `${year}-${day}-${month} ${hours}:${minutes}`;
       }
     });
     return await modal.present();
+  }
+
+  async openNewRichiesta(){
+    const modal = await this.modalController.create({
+      component: EseguiRicPage,
+      cssClass: 'modal-esegui-ric',
+      componentProps: {
+
+      }
+    });
+  
+    await modal.present();
+  
+    let { data } = await modal.onWillDismiss();
+    if(data){
+      console.log(data);
+      
+        this.atlanteService.createAttivita(data).subscribe((response: any) => {
+          data.IDAttivita = response.data;
+          this.atlanteService.createAction(data).subscribe((response: any) => {
+            data.IDAzione = response.data;
+            this.atlanteService.createRilevazione(data).subscribe((response: any) => {
+              data.IDRilevazione = response.data;
+              this.richiesteService.modificaRic(data).subscribe((response: any) => {
+              console.log(response);
+            });
+          });
+        });
+          this.getRichieste();
+      });
+    
+    }
   }
 }
 

@@ -119,6 +119,10 @@ const routes: Routes = [
     path: 'esegui-ric',
     loadChildren: () => import('./esegui-ric/esegui-ric.module').then( m => m.EseguiRicPageModule)
   },
+  {
+    path: 'calendario-attivita',
+    loadChildren: () => import('./calendario-attivita/calendario-attivita.module').then( m => m.CalendarioAttivitaPageModule)
+  },
   // Aggiungi canActivate: [AuthGuard] a tutte le altre rotte che vuoi proteggere
 ];
 
