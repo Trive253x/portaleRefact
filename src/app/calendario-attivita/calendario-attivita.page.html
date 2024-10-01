@@ -1,30 +1,40 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
     <ion-title>Calendario Attività</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="month-selector">
-    <ion-button (click)="previousMonth()" fill="clear">
-      <ion-icon name="chevron-back-outline"></ion-icon>
-    </ion-button>
-    <span class="weekDay">{{ currentMonth | date: 'MMMM yyyy' }}</span>
-    <ion-button (click)="nextMonth()" fill="clear">
-      <ion-icon name="chevron-forward-outline"></ion-icon>
-    </ion-button>
-  </div>
+  <div class="header-container">
+    <!-- Selettore del mese centrato -->
+    <div class="month-selector">
+      <ion-button (click)="previousMonth()" fill="clear">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <span class="weekDay">{{ currentMonth | date: 'MMMM yyyy' }}</span>
+      <ion-button (click)="nextMonth()" fill="clear">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
 
-  <div class="week-selector">
-    <!--<span *ngFor="let day of weekDays" class="weekDay">{{ day.date | date: 'EEEE d MMMM' }}</span>-->
+    <!-- Segmento scorrevole allineato a destra -->
+    <ion-segment [(ngModel)]="selectedSegment" scrollable>
+      <ion-segment-button value="attivita">
+        <ion-label>{{formatString('Attività')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="rilevazioni">
+        <ion-label>{{formatString('Rilevazioni')}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </div>
-
   <div class="calendar-container">
-    <ion-button (click)="previousWeek()" fill="clear">
+    <button
+      style="padding: 5px; margin: 0px; background-color: rgba(240, 248, 255, 0); color:  rgb(52, 152, 219); font-size: large;"
+      (click)="previousWeek()" fill="clear">
       <ion-icon name="chevron-back-outline"></ion-icon>
-    </ion-button>
+    </button>
     <div #table class="table-container" onload="windows.scroll(0,400)">
-      <table >
+      <table>
         <thead>
           <tr>
             <th></th>
@@ -33,25 +43,70 @@
         </thead>
         <tbody>
           <tr *ngFor="let hour of displayedHours; let i = index">
-            <td [ngClass]="{'full-hour': hour.endsWith(':00'), 'half-hour': hour.endsWith(':30')}">{{ hour }}</td>
+
+            <td [ngClass]="{'full-hour': hour.endsWith(':00'), 'half-hour': hour.endsWith(':30')}" class="hours-col">
+              {{ formatHour(hour) }}
+            </td>
             <ng-container *ngFor="let day of weekDays">
-              <td [ngClass]="{'activity-cell': getActivity(day.date, hour)}" style="position: relative;">
-                <div *ngIf="getActivity(day.date, hour)" 
-                     class="activity-card"
-                     [ngStyle]="{
-                       'top': calculateCardTop(getActivity(day.date, hour)?.startHour),
-                       'height': calculateCardHeight(getActivity(day.date, hour)?.startHour, getActivity(day.date, hour)?.endHour)
-                     }">
-                  {{ getActivity(day.date, hour)?.name }}
-                </div>
+              <td [ngClass]="{'activity-cell': getOverlappingActivities(day.date, hour).length > 0}" class="custom-td"
+                (mouseenter)="showButton = { day: day.date, hour: hour }" (mouseleave)="showButton = null">
+                <ng-container *ngFor="let group of getOverlappingActivities(day.date, hour)">
+                  <ng-container *ngFor="let activity of group">
+                    <ng-container *ngIf="activity.startHour === hour">
+                      <div class="activity-card" [ngStyle]="{
+                           'padding': '0px',
+                           'top': calculateCardTop(activity?.startHour),
+                           'height': calculateCardHeight(activity?.startHour, activity?.endHour),
+                           'background-color': activity?.color,
+                           'width': (100 / group.length) + '%',
+                           'left': (100 / group.length * group.indexOf(activity)) + '%'
+                         }" (contextmenu)="openSettingsMenu(activity, $event)">
+                        <span style="font-size: small;">{{activity?.cliente}}</span><br>
+                        <span style="font-size: x-small;">{{ activity?.name }}</span>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+
+                
+
+                <!-- Pulsante con icona che appare al passaggio del mouse sulla cella specifica -->
+                <ion-button *ngIf="showButton?.day === day.date && showButton?.hour === hour" 
+                fill="clear" 
+                class="add-button" 
+                color="primary" 
+                size="small"
+                (click)="creaAttivita(day.date, hour)">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
               </td>
             </ng-container>
+           
           </tr>
+          
         </tbody>
       </table>
     </div>
-    <ion-button (click)="nextWeek()" fill="clear">
+    <div *ngIf="showSettingsMenu" class="settings-menu" [ngStyle]="{'top': menuPosition.top, 'left': menuPosition.left}">
+      <ul>
+        <li (click)="editActivity()">
+          <ion-icon name="create-outline"></ion-icon> Modifica Attività
+        </li>
+        <li (click)="creaRilevazione()">
+          <ion-icon name="add-circle-outline"></ion-icon> Crea Rilevazione
+        </li>
+        <li (click)="deleteActivity()">
+          <ion-icon name="trash-outline"></ion-icon> Elimina Attività
+        </li>
+        <!-- Altre opzioni -->
+      </ul>
+    </div>
+    <button
+      style="padding: 5px; margin: 0px; background-color: rgba(240, 248, 255, 0); color: rgb(52, 152, 219); font-size: large;"
+      (click)="nextWeek()" fill="clear">
       <ion-icon name="chevron-forward-outline"></ion-icon>
-    </ion-button>
+    </button>
   </div>
+
+  
 </ion-content>

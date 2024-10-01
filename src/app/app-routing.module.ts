@@ -121,7 +121,9 @@ const routes: Routes = [
   },
   {
     path: 'calendario-attivita',
-    loadChildren: () => import('./calendario-attivita/calendario-attivita.module').then( m => m.CalendarioAttivitaPageModule)
+    loadChildren: () => import('./calendario-attivita/calendario-attivita.module').then( m => m.CalendarioAttivitaPageModule),
+    canActivate: [AuthGuard],
+    data: { title: 'Calendario Attività' }
   },
   // Aggiungi canActivate: [AuthGuard] a tutte le altre rotte che vuoi proteggere
 ];

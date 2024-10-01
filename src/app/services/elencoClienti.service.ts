@@ -29,4 +29,9 @@ export class ElencoClientiService {
   async getClienti(): Promise<Observable<any>> {
     return this.http.get(this.Url);
 }
+
+getCliente(RegCode: number): Observable<any> {
+  return this.http.get<any>(environment.apiUrl + `Rilevazioni/getClienteInfo.php?RegCode=${RegCode}`);
+}
+
 }

@@ -44,4 +44,8 @@ export class AtlanteService {
   getActivityForUser(idAtlante: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}getAttivitaUtente.php?idAtlante=${idAtlante}`);
   }
+
+  deleteActivity(idAttivita: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}deleteAttivita.php?idAttivita=${idAttivita}`);
+  }
 }

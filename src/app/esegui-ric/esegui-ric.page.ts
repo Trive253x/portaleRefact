@@ -31,6 +31,8 @@ export class EseguiRicPage implements OnInit {
   @Input() IDAzione: string = ''; 
   @Input() IDRilevazione: string = '';
   @Input() IDRichiestaAssegnata: number = 0;
+  @Input() completed: number | boolean = 0;
+  @Input() tipo: string = 'Rilevazione';
 
   tipoAttivita: any[] = [];
   tipoAttivitaFiltered: any[] = [];
@@ -44,7 +46,7 @@ export class EseguiRicPage implements OnInit {
   selectedTipologiaAttivita: any = null;
   showAutocompleteTipologia: boolean = false;
   tipologiaAttivitaEnabled: boolean = false;
-
+  disableMod: boolean = false;
   commesse: any[] = [];
   commesseFiltered: any[] = [];
   searchTermCommesse: string = '';
@@ -63,10 +65,9 @@ export class EseguiRicPage implements OnInit {
   ) { }
 
   ngOnInit() {console.log(this.sedeAtlante);
-    console.log("Richiesta" + this.idRichiesta);
+    this.disableMod = this.tipo === 'Rilevazione su attività' ? true : false;
     if (this.idRichiesta === '' || this.idRichiesta === null || this.idRichiesta === undefined || !this.idRichiesta) {
       this.assistenzaService.getSediWithAtlanteData().subscribe((data) => {
-        console.log(data);
         this.sedi = data.map((item: any) => ({
           id: item.ID,
           codiceCliente: item.Codice_cliente,
@@ -81,13 +82,18 @@ export class EseguiRicPage implements OnInit {
         }));
         this.sediFiltered = [...this.sedi];
         if(this.sedeAtlante){
-          console.log(this.sedeAtlante);
-          console.log(this.sedi);
           this.selectedSede = this.sedi.find((item) => item.sede === this.sedeAtlante);
-          console.log('SEDE =' + this.selectedSede);
           if (this.selectedSede) {
             this.searchTermSede = this.selectedSede.displayValue;
             this.selectSede(this.selectedSede);
+          }else{
+            if(this.PTRegID){
+              this.selectedSede = this.sedi.find((item) => item.PTRegID === this.PTRegID);
+              if (this.selectedSede) {
+                this.searchTermSede = this.selectedSede.displayValue;
+                this.selectSede(this.selectedSede);
+              }
+            }
           }
         }
       });
@@ -126,7 +132,7 @@ export class EseguiRicPage implements OnInit {
         displayValue: `${item.PrjCode} - ${item.Descr}`
       }));
       this.commesseFiltered = [...this.commesse];
-
+      console.log(this.idCommessa);
       if (this.idCommessa) {
         this.selectedCommessa = this.commesse.find((item) => item.id === parseInt(this.idCommessa));
         if (this.selectedCommessa) {
@@ -343,6 +349,13 @@ export class EseguiRicPage implements OnInit {
 
   execute() {
     console.log(this.selectedTipologiaAttivita);
+    console.log(this.descrizione);
+    console.log(this.oggetto);
+    if(this.completed === true || this.completed === 1){
+      this.completed = 1;
+    }else{
+      this.completed = 0;
+    }
     this.modalController.dismiss({
       'selectedDate': this.selectedDate,
       'startTime': this.startTime,
@@ -358,7 +371,7 @@ export class EseguiRicPage implements OnInit {
       'PTRegAddrLocID': this.PTRegAddrLocID,
       'PTRegAddrCntID': this.PTRegAddrCntID,
       'PTRegCntBookID': this.PTRegCntBookID,
-      'oggetto': this.oggetto ?? this.descrizione,
+      'oggetto': this.oggetto !== '' ? this.oggetto : this.descrizione,
       'PTUserID': localStorage.getItem('idAtlante'),
       'sede': this.selectedSede?.sede ? this.selectedSede.sede : '',
       'descrizione': this.descrizione ?? this.oggetto,
@@ -366,7 +379,8 @@ export class EseguiRicPage implements OnInit {
       'IDRilevazione': this.IDRilevazione,
       'IDAttivita': this.IDAttivita,
       'IDRichiestaAssegnata': this.IDRichiestaAssegnata,
-      'PTBRMSurveyTypeID': this.selectedTipologiaAttivita.PTBRMSurveyTypeID
+      'PTBRMSurveyTypeID': this.selectedTipologiaAttivita.PTBRMSurveyTypeID,
+      'completed': this.completed
     });
   }
 }

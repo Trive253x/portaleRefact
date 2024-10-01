@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Seleziona data e ora</ion-title>
+    <ion-title>{{tipo}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +13,8 @@
                      (ionInput)="filterSedi($event)"
                      (ionClear)="clearSelectedSede()"
                      placeholder="Seleziona cliente/sede" 
-                     class="custom-searchbar"></ion-searchbar>
+                     class="custom-searchbar"
+                     [disabled]="disableMod"></ion-searchbar>
     </ion-item>
     <div *ngIf="showAutocompleteSede && sediFiltered.length > 0" class="autocomplete-list">
       <ion-list>
@@ -28,7 +29,8 @@
                      (ionInput)="filterCommesse($event)" 
                      (ionClear)="clearSelectedCommessa()"
                      placeholder="Seleziona commessa" 
-                     class="custom-searchbar"></ion-searchbar>
+                     class="custom-searchbar"
+                     [disabled]="disableMod"></ion-searchbar>
     </ion-item>
     <div *ngIf="showAutocompleteCommesse && commesseFiltered.length > 0" class="autocomplete-list">
       <ion-list>
@@ -49,7 +51,8 @@
                            (ionInput)="filterTipoAttivita($event)" 
                            (ionClear)="clearSelectedTipoAttivita()"
                            placeholder="Seleziona tipo di attività" 
-                           class="custom-searchbar"></ion-searchbar>
+                           class="custom-searchbar"
+                           [disabled]="disableMod"></ion-searchbar>
           </ion-item>
           <div *ngIf="showAutocomplete && tipoAttivitaFiltered.length > 0" class="autocomplete-list">
             <ion-list>
@@ -68,7 +71,8 @@
                            (ionInput)="filterTipologiaAttivita($event)" 
                            (ionClear)="clearSelectedTipologiaAttivita()"
                            placeholder="Seleziona tipologia attività" 
-                           class="custom-searchbar"></ion-searchbar>
+                           class="custom-searchbar"
+                           [disabled]="disableMod"></ion-searchbar>
           </ion-item>
           <div *ngIf="showAutocompleteTipologia && tipologiaAttivitaFiltered.length > 0" class="autocomplete-list">
             <ion-list>
@@ -104,11 +108,15 @@
     </ion-list>
     <ion-item *ngIf="!idRichiesta">
       <ion-label position="stacked">Attività</ion-label>
-      <ion-textarea  [(ngModel)]="descrizione" required placeholder="Scrivi qui lìattività da svolgere" fill="outline"></ion-textarea>
+      <ion-textarea  [disabled]="disableMod" [(ngModel)]="descrizione" required placeholder="Scrivi qui l'attività da svolgere" fill="outline"></ion-textarea>
+    </ion-item>
+    <ion-item *ngIf="tipo !== 'Attività'">
+      <ion-label  position="stacked">Descrizione svolgimento</ion-label>
+      <ion-textarea  [(ngModel)]="note" placeholder="Scrivi qui lo svolgimento della tua attività" fill="outline"></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Descrizione svolgimento</ion-label>
-      <ion-textarea  [(ngModel)]="note" required placeholder="Scrivi qui lo svolgimento della tua attività" fill="outline"></ion-textarea>
+      <ion-label position="stacked">Completata</ion-label>
+      <ion-toggle [(ngModel)]="completed" slot="end"></ion-toggle>
     </ion-item>
     <ion-row>
       <ion-col>

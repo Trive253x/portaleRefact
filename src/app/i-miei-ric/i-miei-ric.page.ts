@@ -184,6 +184,7 @@ export class IMieiRicPage implements OnInit {
   
     let { data } = await modal.onWillDismiss();
     if(data){
+      data.completed = 1;
         this.atlanteService.createAttivita(data).subscribe((response: any) => {
           data.IDAttivita = response.data;
           this.atlanteService.createAction(data).subscribe((response: any) => {
@@ -335,7 +336,7 @@ const dateTime = `${year}-${day}-${month} ${hours}:${minutes}`;
     let { data } = await modal.onWillDismiss();
     if(data){
       console.log(data);
-      
+      data.completed = 1;
         this.atlanteService.createAttivita(data).subscribe((response: any) => {
           data.IDAttivita = response.data;
           this.atlanteService.createAction(data).subscribe((response: any) => {
