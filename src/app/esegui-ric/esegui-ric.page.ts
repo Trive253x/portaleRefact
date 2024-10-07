@@ -64,7 +64,8 @@ export class EseguiRicPage implements OnInit {
     private assistenzaService: AssistenzaService
   ) { }
 
-  ngOnInit() {console.log(this.sedeAtlante);
+  ngOnInit() {
+    console.log(this.startTime, this.endTime);
     this.disableMod = this.tipo === 'Rilevazione su attività' ? true : false;
     if (this.idRichiesta === '' || this.idRichiesta === null || this.idRichiesta === undefined || !this.idRichiesta) {
       this.assistenzaService.getSediWithAtlanteData().subscribe((data) => {

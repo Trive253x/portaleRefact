@@ -48,4 +48,8 @@ export class AtlanteService {
   deleteActivity(idAttivita: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}deleteAttivita.php?idAttivita=${idAttivita}`);
   }
+
+  updateDateAttivita(idAttivita: number, date: string, start: string, end: string): Observable<any> {
+      return this.http.post(this.apiUrl + 'updateDateAttivita.php', {idAttivita, date, start, end});
+  }
 }

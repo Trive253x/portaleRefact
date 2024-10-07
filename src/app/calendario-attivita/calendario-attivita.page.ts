@@ -1,10 +1,12 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { AtlanteService } from '../services/atlante.service';
 import { GestureController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 import { EseguiRicPage } from '../esegui-ric/esegui-ric.page';
 import { RichiesteService } from '../services/elencoRic.service';
 import { ElencoClientiService } from '../services/elencoClienti.service';
+import { PopoverController } from '@ionic/angular';
+import { PopoverContentComponent } from '../popover-setting/popover-setting.component';
 
 @Component({
   selector: 'app-calendario-attivita',
@@ -38,7 +40,7 @@ export class CalendarioAttivitaPage implements OnInit {
 
   constructor(private atlanteService: AtlanteService, private gestureCtrl: GestureController,
     private modalController: ModalController, private richiesteService: RichiesteService,
-    private elencoClientiService: ElencoClientiService
+    private elencoClientiService: ElencoClientiService, private popoverController: PopoverController
   ) { }
 
   ngOnInit() {
@@ -88,62 +90,65 @@ export class CalendarioAttivitaPage implements OnInit {
     return hour; // Mostra l'ora completa sugli schermi più grandi
   }
 
-  // Imposta la gesture per il long press
-  setupLongPressGesture() {
-    const gesture = this.gestureCtrl.create({
-      el: document.body, // Applica il gesto a tutto il body o alla tabella
-      gestureName: 'long-press',
-      threshold: 0,
-      onStart: (ev) => {
-        this.longPressActive = true; // Il long-press è attivato
-        ev.event.preventDefault();
-      },
-      onEnd: (ev) => {
-        if (this.longPressActive && ev.event instanceof MouseEvent || ev.event instanceof TouchEvent) {
-          this.openSettingsMenu(this.selectedActivity, ev.event); // Apri il menu se long-press attivo
-        }
-        this.longPressActive = false; // Reset dopo il rilascio
-      }
-    });
-
-    gesture.enable(true);
-  }
-
-  openSettingsMenu(activity: any, event: MouseEvent | TouchEvent) {
-    event.preventDefault();
+  async showPopover(event: MouseEvent | TouchEvent, activity: any) {
     this.selectedActivity = activity;
-    this.showSettingsMenu = true;
-
-    const menuWidth = 150;
-    const menuHeight = 100;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-
+  
+    // Calculate the position
     let topPosition: number = 0;
     let leftPosition: number = 0;
-
-    // Determina la posizione in base al tipo di evento
+  
     if (event instanceof MouseEvent) {
-      topPosition = event.clientY - 35;
+      topPosition = event.clientY;
       leftPosition = event.clientX;
-    } else if (event instanceof TouchEvent) {
+    } else if (event instanceof TouchEvent && event.touches.length > 0) {
       topPosition = event.touches[0].clientY;
       leftPosition = event.touches[0].clientX;
     }
+  
+    // Adjust position to account for scroll offset
+    const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    leftPosition += scrollX;
+    topPosition += scrollY;
+    console.log(topPosition, leftPosition);
+  
+    // Pass the position to the popover
+    const popover = await this.popoverController.create({
+      component: PopoverContentComponent,
+      componentProps: {
+        'activity': this.selectedActivity,
+        'top': `${topPosition}px`,
+        'left': `${leftPosition}px`
+      },
+      cssClass: 'custom-popover', // Add a custom CSS class if needed
+      backdropDismiss: true,
+      showBackdrop: false // Disable the backdrop if you don't want it
+    });
+  
+    // Handle the result from the popover
+    popover.onDidDismiss().then((result) => {
+      console.log(result);
+      if (result.data) {
+        const action = result.data;
+        if (action === 'edit') {
+          this.editActivity();
+        } else if (action === 'creaRilevazione') {
+          this.creaRilevazione();
+        } else if (action === 'delete') {
+          this.deleteActivity();
+        }
+      }
+    });
+  
+    await popover.present();
 
-    // Assicura che il menu non esca fuori dallo schermo
-    if ((leftPosition + menuWidth) > windowWidth) {
-      leftPosition = windowWidth - menuWidth - 10;
-    }
-
-    if ((topPosition + menuHeight) > windowHeight) {
-      topPosition = windowHeight - menuHeight - 10;
-    }
-
-    this.menuPosition = {
-      top: `${topPosition}px`,
-      left: `${leftPosition}px`
-    };
+    const popoverElement = document.querySelector('ion-popover');
+  if (popoverElement) {
+    popoverElement.style.position = 'absolute';
+    popoverElement.style.top = `${topPosition}px -100`;
+    popoverElement.style.left = `${leftPosition}px - 200`;
+    popoverElement.style.transform = 'none'; // Disable Ionic's default centering transform
+  }
   }
 
   @HostListener('document:click', ['$event'])
@@ -164,9 +169,7 @@ export class CalendarioAttivitaPage implements OnInit {
     }
   }
 
-  editActivity() {
-    this.showSettingsMenu = false;
-  }
+  
 
   creaRilevazione() {
     this.elencoClientiService.getCliente(this.selectedActivity.RegCode).subscribe((response: any) => {
@@ -184,7 +187,12 @@ export class CalendarioAttivitaPage implements OnInit {
     
   }
 
+  editActivity() {
+    this.modifyActivity();
+  }
+
   creaAttivita(day: string, hour: string) {
+
     let date = new Date(day);
     let dateToString = date.toISOString().split('T')[0];
     let dateHour = `${dateToString}T${hour}`;
@@ -223,6 +231,53 @@ export class CalendarioAttivitaPage implements OnInit {
     }
   }
 
+  async modifyActivity() {
+    const modal = await this.modalController.create({
+      component: EseguiRicPage,
+      cssClass: 'modal-esegui-ric',
+      componentProps: {
+        'selectedDate': this.selectedActivity.PlannedStartDate.date.split(' ')[0],
+        'startTime': this.selectedActivity.startHour,
+        'endTime': this.selectedActivity.endHour,
+        'note': this.selectedActivity.note,
+        'idUtente': this.selectedActivity.PTUsrsGrpsIDAssigned,
+        'idTipoAttivita': this.selectedActivity.PTBRMActvTypeID,
+        'idTipologiaAttivita': this.selectedActivity.PTBRMActvTypeTypeID,
+        'idCommessa': this.selectedActivity.PTPrjID,
+        'PTRegID': this.selectedActivity.PTRegID,
+        'PTRegAddrID': this.selectedActivity.PTRegAddrID,
+        'PTRegAddrLocID': this.selectedActivity.PTRegAddrLocID,
+        'PTRegAddrCntID': this.selectedActivity.PTRegAddrCntID,
+        'PTRegCntBookID': this.selectedActivity.PTRegCntBookID,
+        'sedeAtlante': this.selectedActivity.cliente,
+        'descrizione': this.selectedActivity.name,
+        'IDAttivitaAssegnata': this.selectedActivity.IDattivitaAssegnata,
+        'PTUserIDs': this.selectedActivity.PTUsrsGrpsIDAssigned,
+        'completed': this.selectedActivity.Completed,
+        'tipo': 'Attività'
+      }
+    });
+
+    await modal.present();
+
+    let { data } = await modal.onWillDismiss();
+    if (data) {
+      data.completed = 0;
+      data.IDAttivita = this.selectedActivity.id;
+      this.atlanteService.createAttivita(data).subscribe((response: any) => {
+        data.IDRilevazione = null;
+        data.IDAzione = null;
+        this.richiesteService.modificaRic(data).subscribe((response: any) => {
+          console.log(response);
+        });
+        this.getAttivita();
+      });
+
+    }
+  }
+
+
+
   async newRilevazione(date: string, hour: string, attivita: any, idCliente: number) {
     let selectedDate, startTime, endTime;
       selectedDate = date;
@@ -260,6 +315,7 @@ export class CalendarioAttivitaPage implements OnInit {
     let { data } = await modal.onWillDismiss();
     if(data){
       data.IDAttivita = attivita.id;
+      data.completed = 1;
           this.atlanteService.createAction(data).subscribe((response: any) => {
             data.IDAzione = response.data;
             this.atlanteService.createRilevazione(data).subscribe((response: any) => {
@@ -286,25 +342,6 @@ export class CalendarioAttivitaPage implements OnInit {
   ionViewDidEnter() {
     const scrollValue = window.innerWidth < 900 ? 260 : 669; // Se lo schermo è minore di 900px, usa 195, altrimenti 390
     this.table.nativeElement.scrollTop = scrollValue;
-
-    const gesture = this.gestureCtrl.create({
-      el: document.body,
-      gestureName: 'long-press',
-      threshold: 0,
-      onStart: (ev) => {
-        if (ev.event.type === 'contextmenu') {
-          ev.event.preventDefault();
-        }
-      },
-      onEnd: (ev) => {
-        // Controlla il tipo di evento e usalo per aprire il menu
-        if (this.selectedActivity && (ev.event instanceof MouseEvent || ev.event instanceof TouchEvent)) {
-          this.openSettingsMenu(this.selectedActivity, ev.event);
-        }
-      }
-    });
-
-    gesture.enable(true);
   }
 
 
@@ -448,6 +485,12 @@ export class CalendarioAttivitaPage implements OnInit {
     });
 
     return overlappingGroups;
+  }
+
+  onLongPress(activity: any) {
+    // Logica per il longpress
+    console.log('Long press sull\'attività:', activity);
+    // Esegui le azioni desiderate
   }
 
 }

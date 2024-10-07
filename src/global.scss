@@ -24,6 +24,8 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
 
 .my-custom-alert .alert-wrapper {
     background: #333; 
@@ -115,4 +117,244 @@ body {
     --min-width: 60vw;
     --max-height: 95vh;
     --max-width: 80vw;
+}
+
+.p-overlaypanel{
+  background: #ffffff00;
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+
+.custom-popover .popover-wrapper {
+    z-index: 90; /* Ensure it's on top */
+  transform: none !important; /* Disable default Ionic centering */
+}
+
+
+
+
+
+
+
+
+.fc-event {
+  background-color: #8ec3f9; /* Verde moderno */
+  color: white;
+  border: none;
+  padding: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra delicata */
+  transition: all 0.3s ease; /* Animazione morbida */
+}
+
+.fc-event:hover {
+  background-color: #3f7ebe; /* Effetto hover più scuro */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Aumenta l'ombra quando si passa sopra */
+  transform: scale(1.02); /* Leggero zoom al passaggio del mouse */
+}
+
+.fc-day-header {
+  background-color: #f8f9fa;
+  color: #343a40;
+  font-weight: bold;
+  font-size: 16px;
+  border-bottom: 2px solid #dee2e6;
+  padding: 10px;
+  text-transform: uppercase; /* Maiuscolo moderno */
+}
+
+.fc-day-header:hover {
+  background-color: #e9ecef; /* Effetto hover per i giorni */
+}
+
+
+.fc-daygrid-day {
+  background-color: #ffffff; /* Giorni normali con sfondo bianco */
+  border: 1px solid #e9ecef;
+}
+
+.fc-day-other { 
+  background-color: #f0f0f0; /* Giorni di mesi precedenti o successivi con sfondo grigio chiaro */
+  color: #ced4da;
+}
+
+.fc-day-today {
+  background-color: #00d9ff; /* Il giorno attuale in blu */
+  color: white;
+}
+
+.fc {
+  font-family: 'Roboto', sans-serif; /* Font moderno e pulito */
+  padding: 20px; /* Aggiunge più spazio attorno al calendario */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombra per il calendario */
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.fc:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Ombra più pronunciata al passaggio del mouse */
+}
+
+.fc-toolbar {
+  margin-bottom: 20px;
+}
+
+.fc-toolbar-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.fc-toolbar button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fc-toolbar button:hover {
+  border: solid 1px #007bff;
+  color:#000;
+  background-color: #c4c4c404; /* Colore più scuro al passaggio del mouse */
+}
+
+.fc-toolbar .fc-button-primary {
+  background-color: #bebebe;
+}
+
+.fc-toolbar .fc-button-primary:hover {
+  background-color: #a8a8a84d;
+}
+
+.fc-list-event {
+  border-bottom: 1px solid #dee2e6;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.fc-list-event:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.02);
+}
+
+.fc-list-event-title {
+  font-weight: bold;
+  color: #343a40;
+}
+
+.fc-list-event-time {
+  color: #181818;
+}
+
+.fc-timegrid-slot {
+  height: 5px; /* Imposta l'altezza degli slot */
+}
+
+.fc .fc-timegrid-axis-cushion {
+  color: #333; /* Cambia il colore del testo dell'asse */
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  color: #000000; /* Cambia il colore del testo delle etichette */
+}
+
+.fc .fc-timegrid-slot {
+  height: 1px;
+}
+
+@media (max-width: 768px) {
+
+  .fc {
+    padding: 1px;
+    margin-top: 25px;
+    height: 50vh;
+  }
+  .fc-toolbar-title {
+    font-size: 12px; /* Riduci la dimensione del titolo */
+  }
+  
+  .fc .fc-button {
+    font-size: 10px; /* Riduci la dimensione dei pulsanti */
+    padding: 2px; /* Riduci il padding dei pulsanti */
+  }
+
+  .fc .fc-timegrid-slot-label {
+    font-size: 10px; /* Riduci la dimensione del testo per le etichette degli slot */
+    width: fit-content;
+  }
+
+  .fc .fc-daygrid-day-number {
+    font-size: 8px; /* Riduci la dimensione del numero dei giorni */
+  }
+
+  .fc .fc-event {
+    font-size: 8px; /* Riduci la dimensione del testo degli eventi */
+  }
+
+  .fc .fc-timegrid-axis-cushion {
+    color: #333;
+    font-size: 12px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1em;
+  margin: 0px;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0.5em;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: inline-block;
+  padding: 0px 4px;
+  font-size: 8px;
+}
+
+.fc .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  margin-left: 2px;
+}
+}
+
+.fc .fc-button-primary {
+  border-color: #f1f1f1;
+  color: #101010;
+  border-radius: 10px;
+  background: #f7f7f7;
+}
+
+.fc .fc-button-primary:hover {
+  border-color: #f1f1f1;
+  color: #000000;
+  border-radius: 10px;
+  background: #bbbbbb;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
+  background-color: #7777772f;
+  border-color: #f1f1f1;
+  color: #101010;
+
+}
+
+
+
+.hidden-popover {
+visibility: hidden;
+opacity: 0;
+pointer-events: none;
+}
+
+.tippy-box[data-theme~='custom-background'] {
+  background-color: #f0f0f0; /* Imposta il colore di sfondo */
+  color: #000; /* Imposta il colore del testo */
+  border-radius: 8px; /* Aggiunge angoli arrotondati */
+  padding: 10px; /* Aggiunge padding */
+}
+
+.tippy-box[data-theme~='custom-background'] .tippy-arrow {
+  color: #f0f0f0; /* Assicurati che la freccia abbia lo stesso colore di sfondo */
 }

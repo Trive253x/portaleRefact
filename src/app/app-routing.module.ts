@@ -120,8 +120,14 @@ const routes: Routes = [
     loadChildren: () => import('./esegui-ric/esegui-ric.module').then( m => m.EseguiRicPageModule)
   },
   {
-    path: 'calendario-attivita',
+    path: 'calendario-attivita-2',
     loadChildren: () => import('./calendario-attivita/calendario-attivita.module').then( m => m.CalendarioAttivitaPageModule),
+    canActivate: [AuthGuard],
+    data: { title: 'Calendario Attività' }
+  },
+  {
+    path: 'calendario-attivita',
+    loadChildren: () => import('./calendario-full-calendar/calendario-full-calendar.module').then( m => m.CalendarioFullCalendarPageModule),
     canActivate: [AuthGuard],
     data: { title: 'Calendario Attività' }
   },

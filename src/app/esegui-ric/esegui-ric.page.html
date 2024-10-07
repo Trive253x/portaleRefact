@@ -112,7 +112,7 @@
     </ion-item>
     <ion-item *ngIf="tipo !== 'Attività'">
       <ion-label  position="stacked">Descrizione svolgimento</ion-label>
-      <ion-textarea  [(ngModel)]="note" placeholder="Scrivi qui lo svolgimento della tua attività" fill="outline"></ion-textarea>
+      <ion-textarea  required [(ngModel)]="note" placeholder="Scrivi qui lo svolgimento della tua attività" fill="outline"></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Completata</ion-label>
@@ -123,7 +123,7 @@
         <ion-button expand="full" (click)="closeModal()">Chiudi</ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="full" [disabled]="!selectedDate || !startTime || !endTime || !note || !selectedTipoAttivita || !selectedCommessa || (tipologiaAttivitaEnabled && !selectedTipologiaAttivita)" 
+        <ion-button expand="full" [disabled]="!selectedDate || !startTime || !endTime || (!note && (tipo === 'Rilevazione' || tipo === 'Rilevazione su attività')) || !selectedTipoAttivita || !selectedCommessa || (tipologiaAttivitaEnabled && !selectedTipologiaAttivita)" 
         (click)="execute()">Esegui</ion-button>
       </ion-col>
     </ion-row>
