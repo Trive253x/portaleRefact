@@ -41,12 +41,20 @@ export class AtlanteService {
     return this.http.post<any>(`${this.apiUrl}Rilevazione.php`, data);
   }
 
+  getSurveyForUser(idAtlante: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}getRilevazioniUtente.php?idAtlante=${idAtlante}`);
+  }
+
   getActivityForUser(idAtlante: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}getAttivitaUtente.php?idAtlante=${idAtlante}`);
   }
 
   deleteActivity(idAttivita: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}deleteAttivita.php?idAttivita=${idAttivita}`);
+  }
+
+  deleteSurvey(idRilevazione: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}deleteRilevazione.php?idRilevazione=${idRilevazione}`);
   }
 
   updateDateAttivita(idAttivita: number, date: string, start: string, end: string): Observable<any> {

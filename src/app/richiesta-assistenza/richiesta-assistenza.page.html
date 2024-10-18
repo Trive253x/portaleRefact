@@ -14,7 +14,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-label position="floating">Nome PC</ion-label>
+              <ion-label position="floating">Nome PC o Recapito</ion-label>
               <ion-input type="text" [(ngModel)]="nomePc" required name="nomePc" #nomePcModel="ngModel"></ion-input>
               <ion-text color="danger" *ngIf="nomePcModel.invalid && nomePcModel.touched">Nome PC è obbligatorio</ion-text>
             </ion-item>
@@ -24,6 +24,11 @@
               <ion-input class="large-input" type="text" [(ngModel)]="richiesta" required name="richiesta" #richiestaModel="ngModel"></ion-input>
               <ion-text color="danger" *ngIf="richiestaModel.invalid && richiestaModel.touched">Richiesta è obbligatorio</ion-text>
             </ion-item>
+           <!-- <ion-item>
+              <ion-label position="floating">Recapito email/numero</ion-label>
+              <ion-input class="large-input" type="text" [(ngModel)]="recapito" required name="recapito" #richiestaModel="ngModel"></ion-input>
+              <ion-text color="danger" *ngIf="richiestaModel.invalid && richiestaModel.touched">Recapito è obbligatorio</ion-text>
+            </ion-item>-->
       
           
           <ion-item class="file-input-container">

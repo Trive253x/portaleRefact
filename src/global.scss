@@ -138,76 +138,106 @@ body {
 
 
 
-.fc-event {
-  background-color: #8ec3f9; /* Verde moderno */
-  color: white;
-  border: none;
-  padding: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra delicata */
-  transition: all 0.3s ease; /* Animazione morbida */
+/* Tema chiaro */
+:root {
+  --fc-bg-color: #ffffff;
+  --fc-text-color: #000000;
+  --fc-event-bg-color: #8ec3f9;
+  --fc-event-hover-bg-color: #3f7ebe;
+  --fc-today-bg-color: #00d9ff;
+  --fc-toolbar-bg-color: #f8f9fa;
+  --fc-toolbar-button-bg-color: #d8d8d8;
+  --fc-toolbar-button-hover-bg-color: #85858528;
+  --fc-border-color: #dee2e6;
+  --fc-other-day-bg-color: #f0f0f0;
+  --fc-other-day-text-color: #ced4da;
 }
 
-.fc-event:hover {
-  background-color: #3f7ebe; /* Effetto hover più scuro */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Aumenta l'ombra quando si passa sopra */
-  transform: scale(1.02); /* Leggero zoom al passaggio del mouse */
+/* Stili per il tema scuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fc-bg-color: #1e1e1e;
+    --fc-text-color: #ffffff;
+    --fc-event-bg-color: #4a90e2;
+    --fc-event-hover-bg-color: #006bb3;
+    --fc-today-bg-color: #0073d8a3;
+    --fc-toolbar-bg-color: #333333;
+    --fc-toolbar-button-bg-color: #444444;
+    --fc-toolbar-button-hover-bg-color: #555555;
+    --fc-border-color: #444444;
+    --fc-other-day-bg-color: #2c2c2c;
+    --fc-other-day-text-color: #777777;
+}
 }
 
-.fc-day-header {
-  background-color: #f8f9fa;
-  color: #343a40;
-  font-weight: bold;
-  font-size: 16px;
-  border-bottom: 2px solid #dee2e6;
-  padding: 10px;
-  text-transform: uppercase; /* Maiuscolo moderno */
-}
-
-.fc-day-header:hover {
-  background-color: #e9ecef; /* Effetto hover per i giorni */
-}
-
-
-.fc-daygrid-day {
-  background-color: #ffffff; /* Giorni normali con sfondo bianco */
-  border: 1px solid #e9ecef;
-}
-
-.fc-day-other { 
-  background-color: #f0f0f0; /* Giorni di mesi precedenti o successivi con sfondo grigio chiaro */
-  color: #ced4da;
-}
-
-.fc-day-today {
-  background-color: #00d9ff; /* Il giorno attuale in blu */
-  color: white;
-}
-
+/* Stili del calendario */
 .fc {
-  font-family: 'Roboto', sans-serif; /* Font moderno e pulito */
-  padding: 20px; /* Aggiunge più spazio attorno al calendario */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombra per il calendario */
-  background-color: #ffffff;
+  background-color: var(--fc-bg-color);
+  color: var(--fc-text-color);
+  font-family: 'Roboto', sans-serif;
+  padding: 2px 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-.fc:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Ombra più pronunciata al passaggio del mouse */
+.fc-event {
+  background-color: var(--fc-event-bg-color);
+  color: white;
+  border: none;
+  padding: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.fc-event:hover {
+  background-color: var(--fc-event-hover-bg-color);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+}
+
+.fc-day-header {
+  background-color: var(--fc-toolbar-bg-color);
+  color: var(--fc-text-color);
+  font-weight: bold;
+  font-size: 16px;
+  border-bottom: 2px solid var(--fc-border-color);
+  padding: 10px;
+  text-transform: uppercase;
+}
+
+.fc-day-header:hover {
+  background-color: var(--fc-toolbar-button-hover-bg-color);
+}
+
+.fc-daygrid-day {
+  background-color: var(--fc-bg-color);
+  border: 1px solid var(--fc-border-color);
+}
+
+.fc-day-other {
+  background-color: var(--fc-other-day-bg-color);
+  color: var(--fc-other-day-text-color);
+}
+
+.fc-day-today {
+  background-color: var(--fc-today-bg-color);
+  color: white;
 }
 
 .fc-toolbar {
+  background-color: var(--fc-toolbar-bg-color);
   margin-bottom: 20px;
 }
 
 .fc-toolbar-title {
   font-size: 20px;
   font-weight: bold;
-  color: #495057;
+  color: var(--fc-text-color);
 }
 
 .fc-toolbar button {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--fc-toolbar-button-bg-color);
+  color: var(--fc-text-color);
   border: none;
   padding: 10px 15px;
   margin: 0 5px;
@@ -216,130 +246,89 @@ body {
 }
 
 .fc-toolbar button:hover {
-  border: solid 1px #007bff;
-  color:#000;
-  background-color: #c4c4c404; /* Colore più scuro al passaggio del mouse */
+  background-color: var(--fc-toolbar-button-hover-bg-color);
+  border: solid 1px var(--fc-toolbar-button-bg-color);
 }
 
 .fc-toolbar .fc-button-primary {
-  background-color: #bebebe;
+  background-color: var(--fc-toolbar-button-bg-color);
+  color: var(--fc-text-color);
+  border-color: var(--fc-border-color);
 }
 
 .fc-toolbar .fc-button-primary:hover {
-  background-color: #a8a8a84d;
+  background-color: var(--fc-toolbar-button-hover-bg-color);
+  color: var(--fc-text-color);
+  border-color: var(--fc-border-color);
 }
 
 .fc-list-event {
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--fc-border-color);
   padding: 15px;
   transition: all 0.3s ease;
 }
 
 .fc-list-event:hover {
-  background-color: #f8f9fa;
+  background-color: var(--fc-toolbar-button-hover-bg-color);
   transform: scale(1.02);
 }
 
 .fc-list-event-title {
   font-weight: bold;
-  color: #343a40;
+  color: var(--fc-text-color);
 }
 
 .fc-list-event-time {
-  color: #181818;
+  color: var(--fc-text-color);
 }
 
 .fc-timegrid-slot {
-  height: 5px; /* Imposta l'altezza degli slot */
+  height: 5px;
 }
 
 .fc .fc-timegrid-axis-cushion {
-  color: #333; /* Cambia il colore del testo dell'asse */
+  color: var(--fc-text-color);
 }
 
 .fc .fc-timegrid-slot-label-cushion {
-  color: #000000; /* Cambia il colore del testo delle etichette */
-}
-
-.fc .fc-timegrid-slot {
-  height: 1px;
+  color: var(--fc-text-color);
 }
 
 @media (max-width: 768px) {
-
   .fc {
     padding: 1px;
-    margin-top: 25px;
     height: 50vh;
   }
+
   .fc-toolbar-title {
-    font-size: 12px; /* Riduci la dimensione del titolo */
+    font-size: 12px;
   }
-  
+
   .fc .fc-button {
-    font-size: 10px; /* Riduci la dimensione dei pulsanti */
-    padding: 2px; /* Riduci il padding dei pulsanti */
+    font-size: 10px;
+    padding: 2px;
   }
 
   .fc .fc-timegrid-slot-label {
-    font-size: 10px; /* Riduci la dimensione del testo per le etichette degli slot */
-    width: fit-content;
+    font-size: 10px;
   }
 
   .fc .fc-daygrid-day-number {
-    font-size: 8px; /* Riduci la dimensione del numero dei giorni */
+    font-size: 8px;
   }
 
   .fc .fc-event {
-    font-size: 8px; /* Riduci la dimensione del testo degli eventi */
+    font-size: 8px;
   }
 
   .fc .fc-timegrid-axis-cushion {
-    color: #333;
     font-size: 12px;
-}
+  }
 
-.fc .fc-toolbar-title {
-  font-size: 1em;
-  margin: 0px;
+  .fc .fc-col-header-cell-cushion {
+    font-size: 8px;
+  }
 }
-
-.fc .fc-toolbar.fc-header-toolbar {
-  margin-bottom: 0.5em;
-}
-
-.fc .fc-col-header-cell-cushion {
-  display: inline-block;
-  padding: 0px 4px;
-  font-size: 8px;
-}
-
-.fc .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
-  margin-left: 2px;
-}
-}
-
-.fc .fc-button-primary {
-  border-color: #f1f1f1;
-  color: #101010;
-  border-radius: 10px;
-  background: #f7f7f7;
-}
-
-.fc .fc-button-primary:hover {
-  border-color: #f1f1f1;
-  color: #000000;
-  border-radius: 10px;
-  background: #bbbbbb;
-}
-
-.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
-  background-color: #7777772f;
-  border-color: #f1f1f1;
-  color: #101010;
-
-}
-
 
 
 .hidden-popover {

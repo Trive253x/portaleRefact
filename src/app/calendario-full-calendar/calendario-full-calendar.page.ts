@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -12,6 +12,7 @@ import { EseguiRicPage } from '../esegui-ric/esegui-ric.page';
 import { RichiesteService } from '../services/elencoRic.service';
 import { ElencoClientiService } from '../services/elencoClienti.service';
 import tippy from 'tippy.js';
+import { SubTitle } from 'chart.js';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class CalendarioFullCalendarPage implements OnInit {
 
   events: any[] = [];
   activities: any[] = []; 
+  @ViewChild('fullcalendar') calendarComponent?: any;
 
   calendarOptions: CalendarOptions = {
     eventMinHeight: 5,
@@ -33,7 +35,7 @@ export class CalendarioFullCalendarPage implements OnInit {
     buttonText: { today: 'Oggi', month: 'Mese', week: 'Settimana', day: 'Giorno', list: 'Lista' },
     firstDay: 1,
     locale: 'it',
-    height: '80vh',
+    height: 'calc(100vh - 160px)',
     slotDuration: '00:15:00', // Passi di 15 minuti
     slotLabelInterval: '00:30:00', // Etichette ogni 30 minuti
     slotLabelFormat: {
@@ -43,19 +45,10 @@ export class CalendarioFullCalendarPage implements OnInit {
       hour12: false,
     },
     nowIndicator: true,
-    weekNumbers: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     expandRows: true,
-    customButtons: {
-      myCustomButton: {
-        text: 'Rilevazioni',
-        click: function() {
-          alert('Rilevazioni');
-        }
-      }
-    },
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -63,23 +56,21 @@ export class CalendarioFullCalendarPage implements OnInit {
     },
 
     eventMouseEnter: function(info) {
-      const tooltip = tippy(info.el, {
-        content: info.event.extendedProps['Object'],
+      // Crea un tooltip con gestione avanzata di apertura e chiusura
+      tippy(info.el, {
+        content: info.event.extendedProps['Object'] || info.event.extendedProps['Note'],
         placement: 'top',
-        arrow: true, // Se vuoi aggiungere la freccia
-        theme: 'custom-background', // Usa il tema personalizzato con sfondo
+        arrow: true,
+        theme: 'custom-background',
         offset: [0, 10],
-        animation: 'none'
-      });
-    },
-    eventMouseLeave: function(info) {
-      const tooltip = tippy(info.el, {
-        content: info.event.extendedProps['Object'],
-        placement: 'top',
-        arrow: true, // Se vuoi aggiungere la freccia
-        theme: 'custom-background', // Usa il tema personalizzato con sfondo
-        offset: [0, 10],
-        animation: 'none'
+        animation: 'none',
+        trigger: 'mouseenter', // Mostra il tooltip al passaggio del mouse
+        hideOnClick: false,     // Nasconde il tooltip automaticamente su mouseleave
+        duration: [300, 0],     // Tempo di entrata/uscita (300ms per mostrare, 0 per nascondere subito)
+        delay: [100, 0],        // Aggiungi un piccolo ritardo per mostrare il tooltip (100ms)
+        onUntrigger(instance, event) { // Assicurati che si chiuda rapidamente su mouseleave
+          instance.hide();
+        }
       });
     },
     events: this.events,
@@ -88,6 +79,8 @@ export class CalendarioFullCalendarPage implements OnInit {
     eventDrop: this.handleEventDrop.bind(this),
     eventResize: this.handleEventResize.bind(this),
   };
+
+  tipoCalendario: string = 'attivita';
 
   constructor(
     private modalController: ModalController, 
@@ -99,6 +92,34 @@ export class CalendarioFullCalendarPage implements OnInit {
 
   ngOnInit() {
    this.getAttivita();
+  }
+
+  getRilevazioni(){
+    let idAtlante = parseInt(localStorage.getItem('idAtlante') || '0');
+    this.atlanteService.getSurveyForUser(idAtlante).subscribe((data) => {
+      console.log(data);
+      this.events = data.map((survey: { 
+        PTBRMSurveyID: any; 
+        Note: any; 
+        Completed: any; 
+        cliente: any; 
+        FinalStartTime: any; 
+        FinalEndTime: any; 
+        FinalLengthMinutes: number; 
+        FinalStartDate: any; 
+      }) => ({
+        ...survey,
+        id: survey.PTBRMSurveyID,
+        title: '['+survey.cliente +']: '+ survey.Note,
+        description: survey.Note, // Usa il nome o una descrizione appropriata
+        color: this.getEventColor(survey.Completed), // Imposta il colore dinamicamente
+        start: this.formatDate(survey.FinalStartDate.date, survey.FinalStartTime.date),
+        end: this.formatDate(survey.FinalStartDate.date, survey.FinalEndTime.date),
+      }));
+      this.calendarOptions.events = this.events; // Aggiorna gli eventi nel calendario
+      this.cambiaVistaAMese();
+      console.log(this.calendarOptions.events);
+    });
   }
 
   getAttivita(){
@@ -117,19 +138,51 @@ export class CalendarioFullCalendarPage implements OnInit {
       }) => ({
         ...activity,
         id: activity.PTBRMActvID,
-        title: activity.cliente,
+        title: '['+activity.cliente +']: '+ activity.Object,
         description: activity.Object, // Usa il nome o una descrizione appropriata
         color: this.getEventColor(activity.Completed), // Imposta il colore dinamicamente
         start: this.formatDate(activity.PlannedStartDate.date, activity.PlannedStartTime.date),
         end: this.formatDate(activity.PlannedStartDate.date, activity.PlannedEndTime.date),
       }));
       this.calendarOptions.events = this.events; // Aggiorna gli eventi nel calendario
+
+      this.cambiaVistaASettimana();
       console.log(this.calendarOptions.events);
     });
   }
 
+
+    // Funzione per cambiare la visualizzazione
+    cambiaVisualizzazione(vista: string) {
+      const calendarApi = this.calendarComponent.getApi(); // Ottieni l'API di FullCalendar
+      calendarApi.changeView(vista); // Cambia la vista a "vista"
+    }
+  
+    // Esempio di come richiamare la funzione
+    cambiaVistaASettimana() {
+      this.cambiaVisualizzazione('timeGridWeek'); // Passa alla vista settimanale
+    }
+  
+    cambiaVistaAMese() {
+      this.cambiaVisualizzazione('dayGridMonth'); // Passa alla vista mensile
+    }
+
+    
+  segmentChanged(event: any) {
+    console.log('Segment changed', event.detail.value);
+    this.tipoCalendario = event.detail.value;
+    if(this.tipoCalendario === 'attivita'){
+      this.getAttivita();
+    }else{
+      this.getRilevazioni();
+    }
+  }
+
   // Funzione per determinare il colore in base allo stato di completamento
-  getEventColor(completed: number): string {
+  getEventColor(completed: number | null | undefined): string {
+    if (completed === null || completed === undefined) {
+      return '#795548'; // Arancione per valori vuoti o non definiti
+    }
     return completed === 1 ? '#95b634' : '#3498db'; // Verde per completato, blu per non completato
   }
 
@@ -186,7 +239,12 @@ export class CalendarioFullCalendarPage implements OnInit {
   let end = info.endStr.split('T')[1].split('+')[0];
 
   console.log(dateToString, start, end);
-  this.openNewRichiesta(dateToString, start, end);
+  if(this.tipoCalendario === 'attivita'){
+    this.openNewRichiesta(dateToString, start, end);
+  } else {
+    this.openNewRilevazione(dateToString, start, end);
+  }
+  
 }
   }
 
@@ -221,6 +279,43 @@ export class CalendarioFullCalendarPage implements OnInit {
     }
   }
 
+  async openNewRilevazione(date: string = '', start: string = '', end: string = '') {
+    const modal = await this.modalController.create({
+      component: EseguiRicPage,
+      cssClass: 'modal-esegui-ric',
+      componentProps: {
+        'selectedDate': date,
+        'startTime': start,
+        'endTime': end,
+        'completed': 1,
+        'tipo': 'Rilevazione'
+      }
+    });
+
+    await modal.present();
+
+    let { data } = await modal.onWillDismiss();
+    if(data){
+      console.log(data);
+      data.completed = 1;
+        this.atlanteService.createAttivita(data).subscribe((response: any) => {
+          data.IDAttivita = response.data;
+          this.atlanteService.createAction(data).subscribe((response: any) => {
+            data.IDAzione = response.data;
+            this.atlanteService.createRilevazione(data).subscribe((response: any) => {
+              data.IDRilevazione = response.data;
+              this.getRilevazioni();
+              this.richiesteService.modificaRic(data).subscribe((response: any) => {
+              console.log(response);
+            });
+          });
+        });
+          
+      });
+    
+    }
+  }
+
 
 
 async settingPopover(info: any, finalTopPosition: number, finalLeftPosition: number) {
@@ -229,7 +324,8 @@ async settingPopover(info: any, finalTopPosition: number, finalLeftPosition: num
     componentProps: {
       'activity': info.event,
       'top': `${finalTopPosition}px`,
-      'left': `${finalLeftPosition}px`
+      'left': `${finalLeftPosition}px`,
+      'tipoCalendario': this.tipoCalendario
     },
     cssClass: 'my-custom-popover hidden-popover popover-backdrop',
     backdropDismiss: true,
@@ -248,6 +344,8 @@ async settingPopover(info: any, finalTopPosition: number, finalLeftPosition: num
         this.creaRilevazione(info.event);
       } else if (action === 'delete') {
         this.deleteActivity(info.event);
+      } else if (action === 'deleteSurvey') {
+        this.deleteSurvey(info.event);
       }
     }
   });
@@ -263,6 +361,16 @@ async settingPopover(info: any, finalTopPosition: number, finalLeftPosition: num
     popoverElement.style.transform = 'none'; // Disabilita il centramento predefinito di Ionic
   }
 } , 100);
+}
+
+deleteSurvey(event: any) {
+  console.log('Elimina rilevazione:', event);
+  const confirmDelete = confirm('Sei sicuro di voler eliminare questa rilevazione?');
+  if (confirmDelete) {
+    this.atlanteService.deleteSurvey(event.id).subscribe((response) => {
+      this.getRilevazioni();
+    });
+  }
 }
 
 async deleteActivity(event: any) {
@@ -316,6 +424,7 @@ async newRilevazione(date: string, start: string, end: string, attivita: any) {
       'descrizione': attivita.Object,
       'IDAttivitaAssegnata': attivita.IDattivitaAssegnata,
       'PTUserIDs': attivita.PTUsrsGrpsIDAssigned,
+      'IDAttivita': attivita.PTBRMActvID,
       'completed': attivita.Completed,
       'tipo': 'Rilevazione su attività',
     }
@@ -325,7 +434,6 @@ async newRilevazione(date: string, start: string, end: string, attivita: any) {
 
   let { data } = await modal.onWillDismiss();
   if(data){
-    data.IDAttivita = attivita.PTBRMActvID;
         this.atlanteService.createAction(data).subscribe((response: any) => {
           data.IDAzione = response.data;
           this.atlanteService.createRilevazione(data).subscribe((response: any) => {
@@ -372,6 +480,7 @@ async modifyActivity(event: any) {
       'IDAttivitaAssegnata': event.IDattivitaAssegnata,
       'PTUserIDs': event.PTUsrsGrpsIDAssigned,
       'completed': event.Completed,
+      'IDAttivita': event.PTBRMActvID,
       'tipo': 'Attività'
     }
   });
@@ -381,7 +490,6 @@ async modifyActivity(event: any) {
   let { data } = await modal.onWillDismiss();
   if (data) {
     data.completed = 0;
-    data.IDAttivita = event.id;
     this.atlanteService.createAttivita(data).subscribe((response: any) => {
       data.IDRilevazione = null;
       data.IDAzione = null;

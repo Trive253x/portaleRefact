@@ -1,5 +1,5 @@
 <div class="popover-content">
-  <ion-list>
+  <ion-list *ngIf="tipoCalendario == 'attivita'">
     <ion-item button (click)="editActivity()">
       <ion-icon slot="start" name="create-outline"></ion-icon>
       Modifica Attività
@@ -11,6 +11,13 @@
     <ion-item button (click)="deleteActivity()">
       <ion-icon slot="start" name="trash-outline"></ion-icon>
       Elimina Attività
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="tipoCalendario !== 'attivita'">
+    <ion-item button (click)="deleteSurvey()">
+      <ion-icon slot="start" name="trash-outline"></ion-icon>
+      Elimina Rilevazione
     </ion-item>
   </ion-list>
 </div>

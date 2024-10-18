@@ -16,6 +16,7 @@ export class RichiestaAssistenzaPage implements OnInit {
   sede: string = '';
   nomePc: string = '';
   richiesta: string = '';
+  recapito: string = '';
   sedi: any;
   isSedeDisabled: boolean = false;
   permesso: string[] = [];
@@ -37,9 +38,11 @@ export class RichiestaAssistenzaPage implements OnInit {
       formData.append('sede', this.sede);
       formData.append('nomePc', this.nomePc);
       formData.append('richiesta', this.richiesta);
+      //formData.append('recapito', this.recapito);
       console.log(this.sede);
       console.log(this.nomePc);
       console.log(this.richiesta);
+      //console.log(this.recapito);
     
       console.log(formData);
     

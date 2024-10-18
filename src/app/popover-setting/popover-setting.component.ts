@@ -10,6 +10,7 @@ export class PopoverContentComponent {
   @Input() activity: any;
   @Input() top: string = '0px';
   @Input() left: string = '0px';
+  @Input() tipoCalendario: string = 'attivita';
 
 
   constructor(
@@ -29,5 +30,10 @@ export class PopoverContentComponent {
   deleteActivity() {
     console.log('deleteActivity');
     this.popoverController.dismiss('delete');
+  }
+
+  deleteSurvey() {
+    console.log('deleteSurvey');
+    this.popoverController.dismiss('deleteSurvey');
   }
 }

@@ -35,11 +35,12 @@ export class AssistenzaService {
       return this.http.post(this.url3, params.toString(), { headers });
 }
 
-inviaRichiesta(sede: string, nomePc: string, richiesta: string, file?: File): Observable<any> {
+inviaRichiesta(sede: string, nomePc: string, richiesta: string, file?: File, recapito: string = ''): Observable<any> {
   const formData = new FormData();
   formData.append('sede', sede);
   formData.append('nomePc', nomePc);
   formData.append('richiesta', richiesta);
+  //formData.append('recapito', recapito);
   formData.append('IDUtente', this.userService.getID() || '');
 
   // Aggiungi il file solo se è presente
