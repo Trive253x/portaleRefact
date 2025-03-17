@@ -36,10 +36,9 @@ export class ModificaAssetPage implements OnInit {
     this.initializeForm();
     const asset = this.navParams.get('asset');
     console.log('asset:', asset.Utenti);
-    // Inizializza il form con i valori dell'asset ricevuto
     this.assetForm = this.fb.group({
       idAsset: [asset?.idAsset || ''],
-      nomeUtente: [asset?.Utenti || []],
+      Utenti: [ asset?.Utenti && asset.Utenti.length ? asset.Utenti.map((u: { id: any; }) => u.id) : [] ],
       Tipo: [asset?.Tipo || '', Validators.required],
       nomeMacchina: [asset?.nomeMacchina || '', Validators.required],
       Processore: [asset?.Processore || ''],
@@ -79,7 +78,7 @@ export class ModificaAssetPage implements OnInit {
     console.log(this.utenti);
     console.log(this.assetForm.get('Sede')?.value);
     this.utentiFiltrati = this.utenti;
-      this.utentiFiltrati = this.utentiFiltrati.filter((utente: any) => utente.Sede == this.assetForm.get('Sede')?.value);
+    this.utentiFiltrati = this.utentiFiltrati.filter((utente: any) => utente.Sede == this.assetForm.get('Sede')?.value);
     console.log(this.utentiFiltrati);
   }
   

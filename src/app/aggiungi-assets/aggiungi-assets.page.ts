@@ -36,7 +36,7 @@ export class AggiungiAssetsPage implements OnInit {
 
   private initializeForm(): void {
     this.assetForm = this.fb.group({
-      nomeUtente: [''],
+      idUtente: [''],
       Tipo: ['', Validators.required],
       nomeMacchina: ['', Validators.required],
       Processore: ['', Validators.required],

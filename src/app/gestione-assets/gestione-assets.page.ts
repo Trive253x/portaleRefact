@@ -17,7 +17,7 @@ import { paginationLangIt } from '../translate/pagination-lang.it';
 
 interface Assets {
   idAsset: any,
-  Utenti: any,
+  Utenti: { id: number, name: string }[], 
   Sede: any,
   Tipo: any,
   nomeMacchina: any,
@@ -96,6 +96,7 @@ export class GestioneAssetsPage implements OnInit {
   async getElencoAssets() {
     (await this.GestioneAssetsService.getElencoAssets()).subscribe((response: Assets[]) => {
       this.assets = response;
+      console.log("assets ", this.assets);
     }, error => {
       // gestisci l'errore qui
     });
@@ -157,7 +158,23 @@ export class GestioneAssetsPage implements OnInit {
       await modal.present();
     });
   }
-  async modifica(asset: { idAsset:any, Utenti: any, Sede: any, Tipo: any, nomeMacchina: any, Processore: any, Ram: any, Archiviazione: any, sistemaOperativo: any, Antivirus: any, Altro: any, Monitor: any, Vpn: any, Descrizione: any, Servizi: any }) {
+  async modifica(asset: {
+    idAsset: any,
+    Utenti: any,   
+    Sede: any,
+    Tipo: any,
+    nomeMacchina: any,
+    Processore: any,
+    Ram: any,
+    Archiviazione: any,
+    sistemaOperativo: any,
+    Antivirus: any,
+    Altro: any,
+    Monitor: any,
+    Vpn: any,
+    Descrizione: any,
+    Servizi: any
+  }) {
     (await this.ricService.getSediClienti()).pipe(
       switchMap(async (sediObservable) => sediObservable),
       switchMap(sedi => forkJoin({
@@ -165,6 +182,7 @@ export class GestioneAssetsPage implements OnInit {
         ruoli: this.permessiService.getRuoli(this.userService.getTipoUtente())
       }))
     ).subscribe(async ({ sedi, ruoli }) => {
+  
       const modal = await this.modalController.create({
         component: ModificaAssetPage,
         componentProps: {
@@ -198,13 +216,12 @@ export class GestioneAssetsPage implements OnInit {
   }
   filterAsset() {
     const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
-    console.log(this.assets);
-  
+    
     this.assets = this.assets2.filter(assetFilter =>
-      assetFilter.nomeMacchina.toLowerCase().includes(lowerCaseSearchTerm) ||
-      assetFilter.Utenti.some((utente: string) => utente.toLowerCase().includes(lowerCaseSearchTerm)) ||
-      assetFilter.Tipo.toLowerCase().includes(lowerCaseSearchTerm) ||
-      assetFilter.Sede.toLowerCase().includes(lowerCaseSearchTerm)
+      assetFilter.nomeMacchina?.toLowerCase().includes(lowerCaseSearchTerm) ||
+      assetFilter.Utenti?.some((utente: any) => utente.name.toLowerCase().includes(lowerCaseSearchTerm)) ||
+      assetFilter.Tipo?.toLowerCase().includes(lowerCaseSearchTerm) ||
+      assetFilter.Sede?.toLowerCase().includes(lowerCaseSearchTerm)
     );
   }
   getLangLabels() {
@@ -221,5 +238,8 @@ export class GestioneAssetsPage implements OnInit {
       const itemHeight = 100; // Average height for each item row in pixels
       const headerFooterHeight = 150; // Adjust for header/footer height in pixels
       this.itemsPerPage = Math.floor((vh - headerFooterHeight) / itemHeight); // Calculate items per page
+    }
+    getUtentiNames(utenti: any[]): string {
+      return utenti?.map(u => u.name)?.join(', ') || 'Nessun utente';
     }
 }

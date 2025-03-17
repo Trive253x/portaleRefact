@@ -20,7 +20,7 @@
     <div style="height: calc(100% - 112px); overflow-y: auto;">
       <ion-grid>
         <ion-row *ngFor="let asset of assets | filterBy: ['Utenti', 'Sede', 'Tipo', 'nomeMacchina', 'Descrizione']: searchTerm | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="data-row">
-          <ion-col size="3">{{ asset.Utenti }}</ion-col>
+          <ion-col size="3">{{ getUtentiNames(asset.Utenti) }}</ion-col>
           <ion-col size="2">{{ asset.Sede }}</ion-col>
           <ion-col size="2">{{ asset.Tipo }}</ion-col>
           <ion-col size="2">{{ asset.nomeMacchina }}</ion-col>

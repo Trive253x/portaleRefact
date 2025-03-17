@@ -25,8 +25,8 @@
     </ion-item>
     <ion-item>
       <ion-label>Nome Utente</ion-label>
-      <ion-select [multiple]="true" (click)="filterUtenti()" formControlName="nomeUtente" >
-        <ion-select-option *ngFor="let utente of utentiFiltrati" [value]="utente.Utente">{{ utente.nomeUtente }}</ion-select-option>
+      <ion-select [multiple]="true" (click)="filterUtenti()" formControlName="Utenti" >
+        <ion-select-option *ngFor="let utente of utentiFiltrati" [value]="utente.ID">{{ utente.nomeUtente }}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
