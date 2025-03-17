@@ -4,6 +4,25 @@ import { AssistenzaService } from '../services/ric.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoginService } from '../services/login.service';
+import { GestioneAssetsService } from '../services/gestioneAssets.service';
+
+interface Assets{
+  idAsset: any;
+  Utenti: any;
+  Sede: any;
+  Tipo: any;
+  nomeMacchina: any;
+  Processore: any;
+  Ram: any;
+  Archiviazione: any;
+  sistemaOperativo: any;
+  Antivirus: any;
+  Altro: any;
+  Monitor: any;
+  Vpn: any;
+  Descrizione: any;
+  Servizi: any;  
+}
 
 @Component({
   selector: 'app-richiesta-assistenza',
@@ -14,7 +33,7 @@ import { LoginService } from '../services/login.service';
 export class RichiestaAssistenzaPage implements OnInit {
   username: string = '';
   sede: string = '';
-  nomePc: string = '';
+  idAsset: number = -1;
   richiesta: string = '';
   recapito: string = '';
   sedi: any;
@@ -22,12 +41,14 @@ export class RichiestaAssistenzaPage implements OnInit {
   permesso: string[] = [];
   file: File | undefined;
   fileName: string = '';
+  assets: Assets[] = [];
  
   constructor(
     private userService: UserService, 
     private assistenzaService: AssistenzaService, 
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private GestioneAssetsService: GestioneAssetsService
     ) 
     { }
 
@@ -36,13 +57,13 @@ export class RichiestaAssistenzaPage implements OnInit {
       // Create FormData object and append data
       const formData = new FormData();
       formData.append('sede', this.sede);
-      formData.append('nomePc', this.nomePc);
+      formData.append('idAsset', this.idAsset.toString());
       formData.append('richiesta', this.richiesta);
-      //formData.append('recapito', this.recapito);
+      formData.append('recapito', this.recapito);
       console.log(this.sede);
-      console.log(this.nomePc);
+      console.log(this.idAsset);
       console.log(this.richiesta);
-      //console.log(this.recapito);
+      console.log(this.recapito);
     
       console.log(formData);
     
@@ -52,7 +73,7 @@ export class RichiestaAssistenzaPage implements OnInit {
       }
       console.log(formData);
       // Call the service method to send the request
-      this.assistenzaService.inviaRichiesta(this.sede, this.nomePc, this.richiesta, this.file).subscribe(
+      this.assistenzaService.inviaRichiesta(this.sede, this.idAsset, this.richiesta, this.file, this.recapito).subscribe(
        
           data => {
             if (data.error) {
@@ -73,6 +94,9 @@ export class RichiestaAssistenzaPage implements OnInit {
     this.username = this.userService.getUsername();
     this.sede = this.userService.getSede() || ''; // Retrieve the sede from localStorage
     let permessi = this.userService.getTipoUtente();
+    this.getElencoAssets();
+
+    
     if (permessi.includes('1') || permessi.includes('2')) {
       // Ottieni tutte le sedi di tutti i codici clienti o per il codice clienti dell'utente
       this.assistenzaService.getSediClienti().then((observable: Observable<any>) => {
@@ -106,6 +130,19 @@ export class RichiestaAssistenzaPage implements OnInit {
   removeFile() {
     this.file = undefined;
     this.fileName = ''; // Resetta il nome del file
+  }  
+  async getElencoAssets() {
+    (await this.GestioneAssetsService.getElencoAssets())
+      .subscribe((response: Assets[]) => {
+        this.assets = response;
+  
+        // Se c'è solo un asset, selezionalo
+        if (this.assets.length === 1) {
+          this.idAsset = this.assets[0].idAsset;
+        }
+      }, error => {
+        console.error(error);
+      });
   }
   
 }

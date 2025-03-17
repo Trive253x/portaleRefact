@@ -6,51 +6,67 @@
         <form #form="ngForm" (ngSubmit)="inviaRichiesta()">
           <ion-list lines="none">
             <ion-item>
-              <ion-label *ngIf = "(!permesso.includes('5'))&&(!permesso.includes('4'))&&(!permesso.includes('3'))" position="floating">Sede</ion-label>
+              <ion-label *ngIf="(!permesso.includes('5'))&&(!permesso.includes('4'))&&(!permesso.includes('3'))"
+                position="floating">Sede</ion-label>
               <ion-select [(ngModel)]="sede" [disabled]="isSedeDisabled" required name="sede" #sedeModel="ngModel">
                 <ion-select-option *ngFor="let sede of sedi" [value]="sede">{{sede}}</ion-select-option>
               </ion-select>
               <ion-text color="danger" *ngIf="sedeModel.invalid && sedeModel.touched">Sede è obbligatorio</ion-text>
             </ion-item>
-
             <ion-item>
-              <ion-label position="floating">Nome PC o Recapito</ion-label>
-              <ion-input type="text" [(ngModel)]="nomePc" required name="nomePc" #nomePcModel="ngModel"></ion-input>
-              <ion-text color="danger" *ngIf="nomePcModel.invalid && nomePcModel.touched">Nome PC è obbligatorio</ion-text>
+              @if (assets.length > 1){
+                <ion-label position="floating">Nome PC</ion-label>
+                <ion-select [(ngModel)]="idAsset" placeholder="Seleziona un PC" required name="idAsset"
+                  #idAassetModel="ngModel">
+                  <ion-select-option *ngFor="let asset of assets" [value]="asset.idAsset">
+                    {{ asset.nomeMacchina }}
+                  </ion-select-option>
+                </ion-select>
+            } @else if(assets.length == 1){
+              <ion-select [(ngModel)]="idAsset" required name="idAsset" #idAssetModel="ngModel">
+                  <ion-select-option [value]="assets[0].idAsset">
+                    {{ assets[0].nomeMacchina }}
+                  </ion-select-option>
+                </ion-select>
+            }
             </ion-item>
-
+            <ion-item>
+              <ion-label position="floating">Recapito email/numero</ion-label>
+              <ion-input class="large-input" type="text" [(ngModel)]="recapito" required name="recapito"
+                #richiestaModel="ngModel"></ion-input>
+              <ion-text color="danger" *ngIf="richiestaModel.invalid && richiestaModel.touched">Recapito è
+                obbligatorio</ion-text>
+            </ion-item>
             <ion-item>
               <ion-label position="floating">Richiesta</ion-label>
-              <ion-input class="large-input" type="text" [(ngModel)]="richiesta" required name="richiesta" #richiestaModel="ngModel"></ion-input>
-              <ion-text color="danger" *ngIf="richiestaModel.invalid && richiestaModel.touched">Richiesta è obbligatorio</ion-text>
+              <ion-input class="large-input" type="text" [(ngModel)]="richiesta" required name="richiesta"
+                #richiestaModel="ngModel"></ion-input>
+              <ion-text color="danger" *ngIf="richiestaModel.invalid && richiestaModel.touched">Richiesta è
+                obbligatorio</ion-text>
             </ion-item>
-           <!-- <ion-item>
-              <ion-label position="floating">Recapito email/numero</ion-label>
-              <ion-input class="large-input" type="text" [(ngModel)]="recapito" required name="recapito" #richiestaModel="ngModel"></ion-input>
-              <ion-text color="danger" *ngIf="richiestaModel.invalid && richiestaModel.touched">Recapito è obbligatorio</ion-text>
-            </ion-item>-->
-      
-          
-          <ion-item class="file-input-container">
-            <div class="file-content">
-              <div *ngIf="!file; else fileNameTemplate">
-                <ion-label>Allegato</ion-label>
-              </div>
-              <ng-template #fileNameTemplate>
-                <div class="file-name">
-                  {{ fileName }}
-                  <ion-button *ngIf="fileName" fill="clear" (click)="removeFile()" class="remove-button">
-                    <ion-icon name="close-circle" slot="icon-only"></ion-icon>
-                  </ion-button>
+
+
+
+            <ion-item class="file-input-container">
+              <div class="file-content">
+                <div *ngIf="!file; else fileNameTemplate">
+                  <ion-label>Allegato</ion-label>
                 </div>
-              </ng-template>
+                <ng-template #fileNameTemplate>
+                  <div class="file-name">
+                    {{ fileName }}
+                    <ion-button *ngIf="fileName" fill="clear" (click)="removeFile()" class="remove-button">
+                      <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </div>
+                </ng-template>
 
 
-              <ion-button fill="outline" (click)="fileInput.click()">Scegli File</ion-button>
-              <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" name="allegato">
-            </div>
-          </ion-item>
-        </ion-list>
+                <ion-button fill="outline" (click)="fileInput.click()">Scegli File</ion-button>
+                <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" name="allegato">
+              </div>
+            </ion-item>
+          </ion-list>
           <ion-button expand="full" type="submit" [disabled]="form.invalid">Invia Richiesta</ion-button>
         </form>
       </ion-card-content>

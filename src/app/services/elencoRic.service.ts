@@ -11,7 +11,7 @@ import { Data } from '@angular/router';
 })
 export class RichiesteService {
 
-  private Url = environment.apiUrl + 'Assistenza/elencoAssistenze.php';
+  private Url = environment.apiUrl + 'Assistenza/elencoAssistenzeSviluppo.php';
   private Url1 = environment.apiUrl + 'Assistenza/modificaRichiestaAdmin.php';
   private Url2 = environment.apiUrl + 'Assistenza/modificaRichiestaBase.php';
   private Url3 = environment.apiUrl + 'Assistenza/eliminaRichiestaAdmin.php';

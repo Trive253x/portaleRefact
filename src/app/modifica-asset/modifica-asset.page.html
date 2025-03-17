@@ -1,0 +1,105 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Modifica Asset</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Modifica Asset</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Il form è ora legato ad assetForm -->
+  <form [formGroup]="assetForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>idAsset</ion-label>
+      <ion-input [readonly]="true" formControlName="idAsset"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sede</ion-label>
+      <ion-select formControlName="Sede">
+        <ion-select-option *ngFor="let sede of sedi" [value]="sede">{{sede}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nome Utente</ion-label>
+      <ion-select [multiple]="true" (click)="filterUtenti()" formControlName="nomeUtente" >
+        <ion-select-option *ngFor="let utente of utentiFiltrati" [value]="utente.Utente">{{ utente.nomeUtente }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Tipo</ion-label>
+      <ion-input formControlName="Tipo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nome Macchina</ion-label>
+      <ion-input formControlName="nomeMacchina"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Processore</ion-label>
+      <ion-input formControlName="Processore"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ram</ion-label>
+      <ion-input formControlName="Ram"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Archiviazione</ion-label>
+      <ion-input formControlName="Archiviazione"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sistema Operativo</ion-label>
+      <ion-input formControlName="sistemaOperativo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Antivirus</ion-label>
+      <ion-input formControlName="Antivirus"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Monitor</ion-label>
+      <ion-input formControlName="Monitor"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>VPN</ion-label>
+      <ion-input formControlName="Vpn"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Descrizione</ion-label>
+      <ion-input formControlName="Descrizione"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Altro</ion-label>
+      <ion-input formControlName="Altro"></ion-input>
+    </ion-item>
+    <ion-item>
+      <div formArrayName="Servizi">
+        <ion-list-header>
+          <ion-label>Servizi Aggiuntivi</ion-label>
+          <ion-button fill="clear" (click)="addServizio()">
+            <ion-icon slot="icon-only" name="add"></ion-icon>
+          </ion-button>
+        </ion-list-header>
+        <div *ngFor="let servizio of serviziArray.controls; let i = index" [formGroupName]="i">
+          <ion-item>
+            <ion-input formControlName="nomeServizio" placeholder="Nome servizio"></ion-input>
+            <ion-input formControlName="descrizioneServizio" placeholder="Descrizione"></ion-input>
+            <ion-input formControlName="noteServizio" placeholder="Note"></ion-input>
+            <ion-button fill="clear" slot="end" (click)="removeServizio(i)">
+              <ion-icon name="trash" color="danger"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </div>
+      </div>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="danger" fill="outline" (click)="onCancel()">Annulla</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" type="submit" [disabled]="!assetForm.valid">Conferma</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

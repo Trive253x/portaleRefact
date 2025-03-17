@@ -1,0 +1,84 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Info Asset</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Info Asset</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Il form è ora legato ad assetForm -->
+  <form [formGroup]="assetForm">
+    <ion-item>
+      <ion-label>idAsset</ion-label>
+      <ion-input [readonly]="true" formControlName="idAsset"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Tipo</ion-label>
+      <ion-input formControlName="Tipo" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nome Macchina</ion-label>
+      <ion-input formControlName="nomeMacchina" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Processore</ion-label>
+      <ion-input formControlName="Processore" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ram</ion-label>
+      <ion-input formControlName="Ram" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Archiviazione</ion-label>
+      <ion-input formControlName="Archiviazione" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sistema Operativo</ion-label>
+      <ion-input formControlName="sistemaOperativo" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Antivirus</ion-label>
+      <ion-input formControlName="Antivirus" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Monitor</ion-label>
+      <ion-input formControlName="Monitor" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>VPN</ion-label>
+      <ion-input formControlName="Vpn" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Descrizione</ion-label>
+      <ion-input formControlName="Descrizione" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Altro</ion-label>
+      <ion-input formControlName="Altro" [readonly]="true"></ion-input>
+    </ion-item>
+    <ion-item>
+      <div formArrayName="Servizi">
+        <ion-list-header>
+          <ion-label>Servizi Aggiuntivi</ion-label>
+        </ion-list-header>
+        <div *ngFor="let servizio of serviziArray.controls; let i = index" [formGroupName]="i">
+          <ion-item>
+            <ion-input formControlName="nomeServizio" placeholder="Nome servizio" [readonly]="true"></ion-input>
+            <ion-input formControlName="descrizioneServizio" placeholder="Descrizione" [readonly]="true"></ion-input>
+            <ion-input formControlName="noteServizio" placeholder="Note" [readonly]="true"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="danger" fill="outline" (click)="onCancel()">Esci</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

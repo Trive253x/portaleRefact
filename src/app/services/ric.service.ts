@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class AssistenzaService {
 
-  url = environment.apiUrl + 'Assistenza/richiestaAssistenzaIonic.php';
+  url = environment.apiUrl + 'Assistenza/richiesteAssistenzaIonicSviluppo.php';
   url2 = environment.apiUrl + 'Assistenza/inviaEmailRichiesta.php';
   url3 = environment.apiUrl + 'Assistenza/elencoSedi.php';
 
@@ -35,12 +35,12 @@ export class AssistenzaService {
       return this.http.post(this.url3, params.toString(), { headers });
 }
 
-inviaRichiesta(sede: string, nomePc: string, richiesta: string, file?: File, recapito: string = ''): Observable<any> {
+inviaRichiesta(sede: string, idAsset: number, richiesta: string, file?: File, recapito: string = ''): Observable<any> {
   const formData = new FormData();
   formData.append('sede', sede);
-  formData.append('nomePc', nomePc);
+  formData.append('idAsset', idAsset.toString());
   formData.append('richiesta', richiesta);
-  //formData.append('recapito', recapito);
+  formData.append('recapito', recapito);
   formData.append('IDUtente', this.userService.getID() || '');
 
   // Aggiungi il file solo se è presente

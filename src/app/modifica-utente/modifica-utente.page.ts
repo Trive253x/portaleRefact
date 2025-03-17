@@ -6,6 +6,20 @@ import { NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { GestioneUtentiService } from '../services/gestioneUtenti.service';
 import { UserService } from '../services/user.service';
+import { switchMap, forkJoin, of } from 'rxjs';
+
+import { AssistenzaService } from '../services/ric.service';
+import { PermessiService } from '../services/permessi.service';
+
+interface Utente {
+  Email: any;
+  ID: number;
+  nomeUtente: string;
+  Utente: string;
+  Password: string;
+  Sede: string;
+  Ruolo: string[];
+}
 
 @Component({
   selector: 'app-modifica-utente',
@@ -14,24 +28,33 @@ import { UserService } from '../services/user.service';
 })
 
 
+
 export class ModificaUtentePage implements OnInit {
-  sedi!: string[];
+  utenti: any;
+  sedi: any;
+  permessi: String[] = [];
+  searchTerm = '';
+  utenti2: Utente[] = []; // I tuoi dati utente
+  filteredUtenti: Utente[] =[]; // Copia iniziale dei dati utente
+  popoverController: any;
+  utente: any;
   ruoli!: string[];
   form = new FormGroup({});
-  permessi = this.userService.getTipoUtente();
   
   constructor(
+    private permessiService: PermessiService,
     private modalController: ModalController, 
     private navParams: NavParams, 
     private navCtrl: NavController,
     private toastController: ToastController,
     private gestioneUtentiService: GestioneUtentiService,
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private ricService: AssistenzaService,
     ) {
       this.form = this.fb.group({});
      }
-     isDisabled(): boolean {
+    isDisabled(): boolean {
       return this.permessi.includes('5');
     }
     ngOnInit() {
@@ -109,5 +132,4 @@ export class ModificaUtentePage implements OnInit {
       }
     };
   }
-
 }

@@ -1,0 +1,51 @@
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">GestioneAssets</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card style="height: 600px;">
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterAsset()"></ion-searchbar>
+    <ion-grid>
+      <ion-row class="header-row">
+        <ion-col size="3">Utenti</ion-col>
+        <ion-col size="2">Sede</ion-col>
+        <ion-col size="2">Tipo</ion-col>
+        <ion-col size="2">Nome macchina</ion-col>
+        <ion-col size="2">Descrizione</ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div style="height: calc(100% - 112px); overflow-y: auto;">
+      <ion-grid>
+        <ion-row *ngFor="let asset of assets | filterBy: ['Utenti', 'Sede', 'Tipo', 'nomeMacchina', 'Descrizione']: searchTerm | paginate: { itemsPerPage: itemsPerPage, currentPage: p }" class="data-row">
+          <ion-col size="3">{{ asset.Utenti }}</ion-col>
+          <ion-col size="2">{{ asset.Sede }}</ion-col>
+          <ion-col size="2">{{ asset.Tipo }}</ion-col>
+          <ion-col size="2">{{ asset.nomeMacchina }}</ion-col>
+          <ion-col size="2">{{ asset.Descrizione }}</ion-col>
+          <ion-col size="1">
+            <ion-button fill="clear" (click)="modifica(asset)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf = "!permessi.includes('5')" fill="clear" color="danger" (click)="confirmDeleteAsset(asset.idAsset)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row> 
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <pagination-controls (pageChange)="p = $event"
+            [previousLabel]="getLangLabels().previousPageLabel"
+                             [nextLabel]="getLangLabels().nextPageLabel"></pagination-controls>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </ion-card>
+  <ion-button  *ngIf = "!permessi.includes('5')" expand="full" (click)="aggiungiAssetModal()">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Aggiungi asset
+  </ion-button>
+</ion-content>

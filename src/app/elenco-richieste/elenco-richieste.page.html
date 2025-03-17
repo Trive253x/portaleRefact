@@ -13,7 +13,7 @@
       <ion-row>
         <ion-col><strong>Utente</strong></ion-col>
         <ion-col><strong>Sede</strong></ion-col>
-        <ion-col><strong>Nome Pc</strong></ion-col>
+        <ion-col><strong>Asset</strong></ion-col>
         <ion-col><strong>Richiesta</strong></ion-col>
         <ion-col> <strong>Data</strong></ion-col>
         <ion-col>
@@ -32,10 +32,18 @@
     </ion-grid>
     <ion-card-content>
       <ion-grid>
-        <ion-row *ngFor="let richiesta of richieste | filterBy: ['nomeUtente', 'Richiesta', 'NomePc', 'Stato', 'Sede', 'Data']: searchTerm | paginate: { itemsPerPage: itemsPerPage, currentPage: p }">
+        <ion-row
+          *ngFor="let richiesta of richieste | filterBy: ['nomeUtente', 'Richiesta', 'Asset', 'Stato', 'Sede', 'Data']: searchTerm | paginate: { itemsPerPage: itemsPerPage, currentPage: p }">
           <ion-col>{{ richiesta.nomeUtente }}</ion-col>
           <ion-col>{{ richiesta.Sede }}</ion-col>
-          <ion-col>{{ richiesta.NomePc }}</ion-col>
+          <ion-col *ngIf="richiesta.idAsset == null || richiesta.idAsset == -1">
+            <span>Nessun pc Assegnato</span>
+          </ion-col>
+          <!-- Se invece l'idAsset esiste, visualizziamo il nome della macchina -->
+          <ion-col *ngIf="richiesta.idAsset" (click)="viewAsset(richiesta.idAsset)">
+            <span class="hover-underline">{{ richiesta.NomePc }}</span>
+          </ion-col>
+          
           <ion-col (click)="mostraRichiestaCompleta(richiesta)">
             <span class="hover-underline">{{ truncate(richiesta.Richiesta, 15) }}</span>
           </ion-col>
@@ -47,17 +55,20 @@
               </ion-toggle>
             </ion-col>
           </ion-col>
-          <ion-button class="action-class" *ngIf="richiesta.percorsoAllegato" fill="clear" size="small" (click)="openAllegato(richiesta.percorsoAllegato)">
+          <ion-button class="action-class" *ngIf="richiesta.percorsoAllegato" fill="clear" size="small"
+            (click)="openAllegato(richiesta.percorsoAllegato)">
             <ion-icon slot="icon-only" name="attach"></ion-icon>
           </ion-button>
           <ion-col class="action-class">
-            <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small" (click)="modifica(richiesta)">
+            <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small"
+              (click)="modifica(richiesta)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-button>
             <ion-button fill="clear" color="danger" size="small" (click)="elimina(richiesta)">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
-            <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small" (click)="assegnaRichiesta(richiesta.ID)" [color]="richiesta.Assegnata === 0 ? 'danger' : 'success'">
+            <ion-button *ngIf="permesso.includes('1') || permesso.includes('7')" fill="clear" size="small"
+              (click)="assegnaRichiesta(richiesta.ID)" [color]="richiesta.Assegnata === 0 ? 'danger' : 'success'">
               <ion-icon slot="icon-only" name="person-add"></ion-icon>
             </ion-button>
           </ion-col>
@@ -72,9 +83,8 @@
       <!-- Pagination Controls -->
       <ion-row>
         <ion-col class="ion-text-center">
-          <pagination-controls (pageChange)="p = $event"
-          [previousLabel]="getLangLabels().previousPageLabel"
-                           [nextLabel]="getLangLabels().nextPageLabel"></pagination-controls>
+          <pagination-controls (pageChange)="p = $event" [previousLabel]="getLangLabels().previousPageLabel"
+            [nextLabel]="getLangLabels().nextPageLabel"></pagination-controls>
         </ion-col>
       </ion-row>
     </ion-card-content>

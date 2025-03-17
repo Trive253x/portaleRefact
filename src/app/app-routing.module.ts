@@ -131,6 +131,25 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { title: 'Calendario Attività' }
   },
+  {
+    path: 'aggiungi-assets',
+    loadChildren: () => import('./aggiungi-assets/aggiungi-assets.module').then( m => m.AggiungiAssetsPageModule)
+  },
+  {
+    path: 'gestione-assets',
+    loadChildren: () => import('./gestione-assets/gestione-assets.module').then( m => m.GestioneAssetsPageModule),
+    canActivate: [AuthGuard],
+    data: { title: 'Gestione Assets' }
+  },
+  {
+    path: 'modifica-asset',
+    loadChildren: () => import('./modifica-asset/modifica-asset.module').then( m => m.ModificaAssetPageModule)
+  },
+  {
+    path: 'view-asset',
+    loadChildren: () => import('./view-asset/view-asset.module').then( m => m.ViewAssetPageModule)
+  }
+  
   // Aggiungi canActivate: [AuthGuard] a tutte le altre rotte che vuoi proteggere
 ];
 

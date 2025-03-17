@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, assertInInjectionContext } from '@angular/core';
 import { RichiesteService } from '../services/elencoRic.service';
 import { AlertController } from '@ionic/angular';
 import { UserService } from '../services/user.service';
@@ -10,6 +10,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { PopUpImageComponent } from '../pop-up-image/pop-up-image.component';
 import { PopUpRichiesteInfoComponent } from '../pop-up-richieste-info/pop-up-richieste-info.component';
 import { PopoverController } from '@ionic/angular';
+import { GestioneAssetsService } from '../services/gestioneAssets.service';
+import { ViewAssetPage } from '../view-asset/view-asset.page';
 
 import { paginationLangIt } from '../translate/pagination-lang.it';
 
@@ -29,19 +31,21 @@ export class ElencoRichiestePage implements OnInit {
   richiestaOperatore: any[] = [];
   p: number = 1; // Current page number
   itemsPerPage: number = 10; // Default items per page
+  asset: any;
 
   constructor(
-    private router: Router, 
-    private navController: NavController, 
-    private richiesteService: RichiesteService, 
-    private alertController: AlertController, 
+    private router: Router,
+    private navController: NavController,
+    private richiesteService: RichiesteService,
+    private alertController: AlertController,
     private userService: UserService,
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
-    private popoverController: PopoverController
-    ) {
+    private popoverController: PopoverController,
+    private gestioneAssetsService: GestioneAssetsService
+  ) {
     this.permesso = this.userService.getTipoUtente();
-   } // Inietta AlertController
+  } // Inietta AlertController
 
   ngOnInit() {
     this.getRichieste();
@@ -69,8 +73,24 @@ export class ElencoRichiestePage implements OnInit {
 
   getRichieste() {
     this.richiesteService.getRichieste().subscribe((response: any) => {
+      // Salviamo la lista originale in richieste e richieste2
       this.richieste = response;
       this.richieste2 = response;
+  
+      // Per ogni richiesta, se ha un idAsset, richiedi i dettagli dell'asset
+      this.richieste.forEach(richiesta => {
+        if (richiesta.idAsset) {
+          console.log("idAsset: " + richiesta.idAsset);
+          this.gestioneAssetsService.getAssetsById(richiesta.idAsset).subscribe((response: any) => {
+            // Salviamo il nome della macchina in una nuova proprietà, ad esempio "nomeMacchina"
+            console.log("response: " + response[0].idAsset);
+            console.log("nomeMacchina: " + response[0].nomeMacchina);
+            richiesta.NomePc = response[0].nomeMacchina;
+          });
+          console.log("richiesta: " + richiesta);
+        }
+      });
+      console.log(response);
     });
   }
 
@@ -118,7 +138,7 @@ export class ElencoRichiestePage implements OnInit {
           role: 'cancel'
         }, {
           text: 'Elimina',
-          handler: async() => {
+          handler: async () => {
             this.richiesteService.delateRichiesta(richiesta);
             this.richieste = this.richieste.filter((item: any) => item.ID !== richiesta.ID);
             const alert = await this.alertController.create({
@@ -145,10 +165,10 @@ export class ElencoRichiestePage implements OnInit {
   }
 
   changeAutorizzazione(richiesta: any) {
-    if(richiesta.Stato == 'DA AUTORIZZARE'){
+    if (richiesta.Stato == 'DA AUTORIZZARE') {
       richiesta.Stato = 'AUTORIZZATA';
       this.richiesteService.updateStato(richiesta);
-    } else if(richiesta.Stato == 'AUTORIZZATA'){
+    } else if (richiesta.Stato == 'AUTORIZZATA') {
       richiesta.Stato = 'DA AUTORIZZARE';
       this.richiesteService.updateStato(richiesta);
     }
@@ -207,7 +227,7 @@ export class ElencoRichiestePage implements OnInit {
     return await modal.present();
   }
 
-  async infoRichiesta(richiesta: any){
+  async infoRichiesta(richiesta: any) {
     this.richiesteService.getRichiestaOperatoreInfo(richiesta.ID).subscribe(async (response: any) => {
       console.log(response);
       this.richiestaOperatore = response;
@@ -222,5 +242,19 @@ export class ElencoRichiestePage implements OnInit {
       this.richiestaOperatore = [];
       return await modal.present();
     });
+  }
+  viewAsset(id: number) {
+    this.gestioneAssetsService.getAssetsById(id).subscribe((response: any) => {
+      //console.log(response);
+      this.asset = response[0];
+      console.log("asset " + this.asset);
+    });
+    const modal = this.modalController.create({
+      component: ViewAssetPage,
+      componentProps: {
+        'asset': this.asset
+      }
+    });
+    modal.then(modal => modal.present());
   }
 }

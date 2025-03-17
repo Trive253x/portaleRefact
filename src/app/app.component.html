@@ -60,13 +60,18 @@
             <ion-label>Gestione Utenti</ion-label>
           </ion-item>
         </ion-menu-toggle>
+        <ion-menu-toggle *ngIf="permesso.includes('7')||permesso.includes('2')||permesso.includes('8')" auto-hide="false">
+          <ion-item routerLink="/gestione-assets" routerDirection="root">
+            <ion-label>Gestione Assets</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
         <ion-menu-toggle *ngIf="permesso.includes('7')||permesso.includes('2')||permesso.includes('1')" auto-hide="false">
-          <ion-item  routerLink="/gestione-sedi" routerDirection="root">
+          <ion-item routerLink="/gestione-sedi" routerDirection="root">
             <ion-label>Gestione Sedi</ion-label>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle *ngIf="permesso.includes('7')" auto-hide="false">
-          <ion-item  routerLink="/gestione-clienti" routerDirection="root">
+          <ion-item routerLink="/gestione-clienti" routerDirection="root">
             <ion-label>Gestione Clienti</ion-label>
           </ion-item>
         </ion-menu-toggle>
