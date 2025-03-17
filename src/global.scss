@@ -104,9 +104,9 @@ body {
     align-content: center;
     align-items: center;
     justify-content: center;
-    --min-height: 20%;
-    --min-width: 20%;
-    --max-height: 25%;
+    --min-height: 70%;
+    --min-width: 70%;
+    --max-height: 90%;
 }
 
 .modal-esegui-ric{
@@ -347,3 +347,4 @@ pointer-events: none;
 .tippy-box[data-theme~='custom-background'] .tippy-arrow {
   color: #f0f0f0; /* Assicurati che la freccia abbia lo stesso colore di sfondo */
 }
+
